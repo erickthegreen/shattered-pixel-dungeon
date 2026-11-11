@@ -38,6 +38,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Frost;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.LockedFloor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
+import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Paralysis;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Roots;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Sleep;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Slow;
@@ -103,6 +104,16 @@ public class DM300 extends Mob {
 	@Override
 	public int drRoll() {
 		return super.drRoll() + Random.NormalIntRange(0, 10);
+	}
+
+	// Nova descarga mecanica: golpes corpo a corpo podem paralisar.
+	@Override
+	public int attackProc(Char enemy, int damage) {
+		damage = super.attackProc(enemy, damage);
+		if (enemy == Dungeon.hero && Random.Int(4) == 0) {
+			Buff.affect(enemy, Paralysis.class, 2f);
+		}
+		return damage;
 	}
 
 	public int pylonsActivated = 0;
