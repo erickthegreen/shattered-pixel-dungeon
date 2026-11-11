@@ -116,6 +116,9 @@ public enum HeroClass {
 
 		new ScrollOfIdentify().identify();
 
+		// Mod pessoal: cada nova partida com 200 pergaminhos de melhoria.
+		new ScrollOfUpgrade().quantity(200).identify().collect();
+
 		switch (this) {
 			case WARRIOR:
 				initWarrior( hero );
