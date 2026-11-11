@@ -388,6 +388,10 @@ public class Tengu extends Mob {
 		public boolean act(boolean enemyInFOV, boolean justAlerted) {
 			
 			enemySeen = enemyInFOV;
+			// Nova fumaça ilusoria: ataques cegantes ocasionais durante o duelo.
+			if (enemyInFOV && enemy == Dungeon.hero && Random.Int(7) == 0) {
+				Buff.affect(enemy, Blindness.class, 3f);
+			}
 			if (enemyInFOV && !isCharmedBy( enemy ) && canAttack( enemy )) {
 				
 				if (canUseAbility()){
