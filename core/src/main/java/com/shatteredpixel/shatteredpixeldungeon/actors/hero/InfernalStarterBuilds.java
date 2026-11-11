@@ -10,6 +10,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfArcana;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEnergy;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfEvasion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfFuror;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfHaste;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
@@ -109,6 +111,9 @@ public final class InfernalStarterBuilds {
     /** Only preferred rings are upgraded; all other types stay at their normal level. */
     public static int ringUpgrade(HeroClass cls, Class<?> ringClass) {
         if (cls == null) return 0;
+        // Universal safety/mobility bonuses, on top of the class-specific build.
+        if (ringClass == RingOfHaste.class) return 15;
+        if (ringClass == RingOfMight.class) return 12;
         switch (cls) {
             case WARRIOR:
                 if (ringClass == RingOfFuror.class) return 16;
