@@ -106,7 +106,9 @@ public abstract class ChampionEnemy extends Buff {
 			case 5:             buffCls = Growing.class;      break;
 		}
 
-		if (Dungeon.mobsToChampion <= 0 && Dungeon.isChallenged(Challenges.CHAMPION_ENEMIES)) {
+		// Aumento de 1000% sobre a chance base de ~1/8 para inimigos campeoes.
+		// A probabilidade final e limitada a 100% e nao exige ativar o desafio.
+		if (Random.Float() < Math.min(1f, 11f / (8f - Math.min(20, Dungeon.scalingDepth()-1)/10f))) {
 
 			//we block certain standout enemies on floor <10 from becoming champions
 			if (m instanceof Crab  && Dungeon.scalingDepth() <= 3) return;
@@ -116,7 +118,7 @@ public abstract class ChampionEnemy extends Buff {
 
 			Buff.affect(m, buffCls);
 			//numbers of mobs until a champion scales from 1/8 to 1/6 as depths increases
-			Dungeon.mobsToChampion += 8 - Math.min(20, Dungeon.scalingDepth()-1)/10f;
+			Dungeon.mobsToChampion = 1f;
 			if (m.state != m.PASSIVE) {
 				m.state = m.WANDERING;
 			}
