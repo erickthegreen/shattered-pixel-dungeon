@@ -24,6 +24,7 @@ package com.shatteredpixel.shatteredpixeldungeon.windows;
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.SPDAction;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Belongings;
+import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.Bag;
@@ -57,7 +58,7 @@ public class WndBag extends WndTabbed {
 	public static Window INSTANCE;
 
 	protected static final int COLS_P   = 5;
-	protected static final int COLS_L   = 5;
+	protected static final int COLS_L   = 8;
 	
 	protected static int SLOT_WIDTH_P   = 28;
 	protected static int SLOT_WIDTH_L   = 28;
@@ -104,7 +105,9 @@ public class WndBag extends WndTabbed {
 		slotHeight = PixelScene.landscape() ? SLOT_HEIGHT_L : SLOT_HEIGHT_P;
 
 		nCols = PixelScene.landscape() ? COLS_L : COLS_P;
-		nRows = (int)Math.ceil(25/(float)nCols); //we expect to lay out 25 slots in all cases
+		// At least 20 backpack items plus 16 equipped slots: 12 rings, weapon, armor,
+		// artifact, and mixed slot. Extra equipped champion weapon adds one row.
+		nRows = (int)Math.ceil((containerCapacity(bag) + 17)/(float)nCols);
 
 		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
 		int windowHeight = TITLE_HEIGHT + slotHeight * nRows + SLOT_MARGIN * (nRows - 1);
@@ -140,6 +143,10 @@ public class WndBag extends WndTabbed {
 		}
 
 		layoutTabs();
+	}
+
+	private static int containerCapacity(Bag bag) {
+		return Math.max(20, bag.capacity());
 	}
 
 	public ItemSelector getSelector() {
@@ -250,8 +257,11 @@ public class WndBag extends WndTabbed {
 		placeItem( stuff.misc != null ? stuff.misc : new Placeholder( ItemSpriteSheet.SOMETHING ) );
 		placeItem( stuff.ring != null ? stuff.ring : new Placeholder( ItemSpriteSheet.RING_HOLDER ) );
 		placeItem( stuff.extraRing != null ? stuff.extraRing : new Placeholder( ItemSpriteSheet.RING_HOLDER ) );
+		for (Ring extra : stuff.ringSlots) {
+			placeItem(extra != null ? extra : new Placeholder(ItemSpriteSheet.RING_HOLDER));
+		}
 
-		int equipped = 6;
+		int equipped = 6 + stuff.ringSlots.length;
 
 		//the container itself if it's not the root backpack
 		if (container != Dungeon.hero.belongings.backpack){
