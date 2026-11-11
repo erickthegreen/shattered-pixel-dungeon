@@ -5,6 +5,7 @@ on:
     branches:
       - mod/aneis-e-pergaminhos
       - mod/edicao-infernal
+      - mod/edicao-infernal-builds
   workflow_dispatch:
 
 permissions:
