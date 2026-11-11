@@ -55,9 +55,9 @@ public class MimicTooth extends Trinket {
 
 	public static float mimicChanceMultiplier( int level ){
 		if (level == -1){
-			return 1f;
+			return 11f; // x11 corresponde a um aumento de 1000% das aparicoes.
 		} else {
-			return 1.5f + 0.5f*level;
+			return Math.max(11f, 1.5f + 0.5f*level);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class MimicTooth extends Trinket {
 
 	public static float ebonyMimicChance( int level ){
 		if (level >= 0){
-			return 0.125f + 0.125f * level;
+			return Math.min(1f, 0.125f + 0.125f * level); // chance maxima de 100%
 		} else {
 			return 0;
 		}
