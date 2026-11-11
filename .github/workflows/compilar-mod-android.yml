@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - mod/aneis-e-pergaminhos
+      - mod/edicao-infernal
   workflow_dispatch:
 
 permissions:
