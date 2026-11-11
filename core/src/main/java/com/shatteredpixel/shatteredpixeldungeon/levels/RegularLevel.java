@@ -206,20 +206,21 @@ public abstract class RegularLevel extends Level {
 	public int mobLimit() {
 		if (Dungeon.depth <= 1){
 			if (!Statistics.amuletObtained) return 0;
-			else                            return 10;
+			else                            return 85;
 		}
 
 		int mobs = 3 + Dungeon.depth % 5 + Random.Int(3);
 		if (feeling == Feeling.LARGE){
 			mobs = (int)Math.ceil(mobs * 1.33f);
 		}
-		return mobs;
+		return Math.min(85, mobs * 11); // +1000% (11x) com limite de desempenho
 	}
 	
 	@Override
 	protected void createMobs() {
 		//on floor 1, 8 pre-set mobs are created so the player can get level 2.
-		int mobsToSpawn = Dungeon.depth == 1 ? 8 : mobLimit();
+		int mobsToSpawn = Dungeon.depth == 1 ? Math.min(88, Math.max(12, length()/5)) : mobLimit();
+		int failedPlacements = 0;
 
 		ArrayList<Room> stdRooms = new ArrayList<>();
 		for (Room room : rooms) {
@@ -252,7 +253,7 @@ public abstract class RegularLevel extends Level {
 		PathFinder.buildDistanceMap(entrance(), entranceWalkable, 8);
 
 		Mob mob = null;
-		while (mobsToSpawn > 0) {
+		while (mobsToSpawn > 0 && failedPlacements < Math.max(20, stdRooms.size()*12)) {
 			if (mob == null) mob = createMob();
 			Room roomToSpawn;
 			
@@ -275,6 +276,7 @@ public abstract class RegularLevel extends Level {
 					|| (!openSpace[mob.pos] && mob.properties().contains(Char.Property.LARGE))));
 
 			if (tries >= 0) {
+				failedPlacements = 0;
 				mobsToSpawn--;
 				mobs.add(mob);
 				mob = null;
@@ -302,6 +304,8 @@ public abstract class RegularLevel extends Level {
 						mob = null;
 					}
 				}
+			} else {
+				failedPlacements++;
 			}
 		}
 
