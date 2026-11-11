@@ -21,8 +21,13 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Configure Android SDK
-        uses: android-actions/setup-android@v3
+      # O runner ubuntu-latest ja inclui Android SDK. A acao setup-android@v3
+      # falha tentando instalar o pacote legado "tools", removido do repositorio.
+      - name: Verify Android SDK
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -d "$ANDROID_HOME"
+          ls "$ANDROID_HOME/platforms" || true
       - name: Build APK
         run: |
           chmod +x ./gradlew
