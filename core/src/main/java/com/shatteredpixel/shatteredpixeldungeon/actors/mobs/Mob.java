@@ -145,8 +145,12 @@ public abstract class Mob extends Char {
 		if (firstAdded) {
 			//modify health for ascension challenge if applicable, only on first add
 			float percent = HP / (float) HT;
-			HT = Math.round(HT * AscensionChallenge.statModifier(this));
-			HP = Math.round(HT * percent);
+			// Infernal: x100 HP and defense, with overflow protection.
+			// onAdd is called once; restored monsters retain their saved values.
+			float modifier = AscensionChallenge.statModifier(this);
+			HT = (int)Math.max(1, Math.min(1_500_000_000d, HT * (double)modifier * 100d));
+			HP = Math.max(1, Math.min(HT, Math.round(HT * percent)));
+			defenseSkill = (int)Math.min(1_500_000_000L, Math.max(0L, defenseSkill * 100L));
 			firstAdded = false;
 		}
 	}
