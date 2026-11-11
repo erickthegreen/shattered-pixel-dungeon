@@ -67,6 +67,8 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImag
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
+import com.shatteredpixel.shatteredpixeldungeon.items.armor.PlateArmor;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAugmentation;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
@@ -121,8 +123,9 @@ public enum HeroClass {
 
 		// Mod pessoal: equipamentos especiais a cada partida nova.
 		new ScrollOfUpgrade().quantity(1000).identify().collect();
-		new StoneOfAugmentation().identify().collect();
-		new StoneOfEnchantment().identify().collect();
+		new ScrollOfTransmutation().quantity(1000).identify().collect();
+		new StoneOfAugmentation().quantity(1000).identify().collect();
+		new StoneOfEnchantment().quantity(1000).identify().collect();
 		// Nivel +1000, mesmo que o limite de criacao normal do dente seja +3.
 		new MimicTooth().level(1000).identify().collect();
 
@@ -151,6 +154,9 @@ public enum HeroClass {
 				initCleric( hero );
 				break;
 		}
+
+		// Armadura de placas +100 para enfrentar os inimigos escalados.
+		hero.belongings.armor = (PlateArmor) new PlateArmor().level(100).identify();
 
 		if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {
