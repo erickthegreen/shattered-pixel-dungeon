@@ -62,6 +62,10 @@ public class MobSpawner extends Actor {
 	public static ArrayList<Class<? extends Mob>> getMobRotation(int depth ){
 		ArrayList<Class<? extends Mob>> mobs = standardMobRotation( depth );
 		addRareMobs(depth, mobs);
+		// Elite original: pertence a rotacao normal a partir do terceiro andar.
+		if (depth >= 3 && Random.Float() < 0.5f) {
+			mobs.add(AbyssalDevourer.class);
+		}
 		swapMobAlts(mobs);
 		Random.shuffle(mobs);
 		return mobs;
