@@ -85,7 +85,7 @@ public final class InfernalStarterBuilds {
         }
 
         // Apply the starting Ring of Might's hit-point benefit immediately.
-        hero.updateHT(false);
+        hero.updateHT(true);
         if (hero.heroClass == HeroClass.DUELIST) {
             Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
         }
