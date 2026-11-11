@@ -230,6 +230,9 @@ public abstract class Level implements Bundlable {
 				for (Class<?> ringType : Generator.Category.RING.classes) {
 					com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring ring =
 							(com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring) Reflection.newInstance(ringType);
+					int upgrade = com.shatteredpixel.shatteredpixeldungeon.actors.hero.InfernalStarterBuilds
+							.ringUpgrade(Dungeon.hero.heroClass, ringType);
+					ring.level(upgrade);
 					ring.identify();
 					addItemToSpawn(ring);
 				}
