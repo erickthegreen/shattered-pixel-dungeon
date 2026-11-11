@@ -388,6 +388,9 @@ public abstract class Char extends Actor {
 		} else if (hit( this, enemy, accMulti, false )) {
 			
 			int dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
+			if (enemy instanceof Mob && enemy.alignment == Alignment.ENEMY) {
+				dr = (int)Math.min(1_500_000_000L, Math.max(0L, dr * 100L));
+			}
 			
 			if (this instanceof Hero){
 				Hero h = (Hero)this;
@@ -416,6 +419,10 @@ public abstract class Char extends Actor {
 			}
 
 			dmg = dmg*dmgMulti;
+			// Scale every ordinary monster melee attack, without overflowing int.
+			if (this instanceof Mob && alignment == Alignment.ENEMY) {
+				dmg = Math.min(1_500_000_000f, dmg * 100f);
+			}
 
 			//flat damage bonus is affected by multipliers
 			dmg += dmgBonus;
@@ -618,6 +625,9 @@ public abstract class Char extends Actor {
 
 	public static boolean hit( Char attacker, Char defender, float accMulti, boolean magic ) {
 		float acuStat = attacker.attackSkill( defender );
+		if (attacker instanceof Mob && attacker.alignment == Alignment.ENEMY) {
+			acuStat = Math.min(1_500_000_000f, acuStat * 100f);
+		}
 		float defStat = defender.defenseSkill( attacker );
 
 		if (defender instanceof Hero && ((Hero) defender).damageInterrupt){
