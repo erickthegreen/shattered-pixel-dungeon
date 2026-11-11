@@ -85,6 +85,8 @@ public class Belongings implements Iterable<Item> {
 	public KindofMisc misc = null;
 	public Ring ring = null;
 	public Ring extraRing = null;
+	// Dez espacos adicionais: 12 slots exclusivos de anel no total.
+	public Ring[] ringSlots = new Ring[10];
 
 	//used when thrown weapons temporary become the current weapon
 	public KindOfWeapon thrownWeapon = null;
@@ -165,6 +167,32 @@ public class Belongings implements Iterable<Item> {
 		}
 	}
 
+
+	public Ring ringSlot(int index) {
+		Ring equipped = ringSlots[index];
+		if (!lostInventory() || (equipped != null && equipped.keptThroughLostInventory())) {
+			return equipped;
+		}
+		return null;
+	}
+
+	public int freeRingSlot() {
+		for (int i = 0; i < ringSlots.length; i++) {
+			if (ringSlots[i] == null) return i;
+		}
+		return -1;
+	}
+
+	public boolean hasFreeDedicatedRingSlot() {
+		return ring == null || extraRing == null || freeRingSlot() >= 0;
+	}
+
+	public void putInFreeRingSlot(Ring item) {
+		if (ring == null) ring = item;
+		else if (extraRing == null) extraRing = item;
+		else if (freeRingSlot() >= 0) ringSlots[freeRingSlot()] = item;
+	}
+
 	public KindOfWeapon secondWep(){
 		if (!lostInventory() || (secondWep != null && secondWep.keptThroughLostInventory())){
 			return secondWep;
@@ -181,6 +209,7 @@ public class Belongings implements Iterable<Item> {
 	private static final String MISC       = "misc";
 	private static final String RING       = "ring";
 	private static final String EXTRA_RING = "extra_ring";
+	private static final String RING_SLOT_PREFIX = "personal_ring_slot_";
 
 	private static final String SECOND_WEP = "second_wep";
 
@@ -194,6 +223,7 @@ public class Belongings implements Iterable<Item> {
 		bundle.put( MISC, misc );
 		bundle.put( RING, ring );
 		bundle.put( EXTRA_RING, extraRing );
+		for (int i = 0; i < ringSlots.length; i++) bundle.put(RING_SLOT_PREFIX + i, ringSlots[i]);
 		bundle.put( SECOND_WEP, secondWep );
 	}
 
@@ -221,6 +251,10 @@ public class Belongings implements Iterable<Item> {
 
 		extraRing = (Ring) bundle.get(EXTRA_RING);
 		if (extraRing() != null) extraRing().activate(owner);
+		for (int i = 0; i < ringSlots.length; i++) {
+			ringSlots[i] = (Ring) bundle.get(RING_SLOT_PREFIX + i);
+			if (ringSlot(i) != null) ringSlot(i).activate(owner);
+		}
 
 		secondWep = (KindOfWeapon) bundle.get(SECOND_WEP);
 		if (secondWep() != null)    secondWep().activate(owner);
@@ -236,6 +270,7 @@ public class Belongings implements Iterable<Item> {
 		misc = null;
 		ring = null;
 		extraRing = null;
+		for (int i = 0; i < ringSlots.length; i++) ringSlots[i] = null;
 	}
 	
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
@@ -405,6 +440,17 @@ public class Belongings implements Iterable<Item> {
 				Badges.validateItemLevelAquired(extraRing());
 			}
 		}
+		for (int i = 0; i < ringSlots.length; i++) {
+			Ring equipped = ringSlot(i);
+			if (equipped != null) {
+				if (ShardOfOblivion.passiveIDDisabled()) {
+					equipped.setIDReady();
+				} else {
+					equipped.identify();
+					Badges.validateItemLevelAquired(equipped);
+				}
+			}
+		}
 		if (ShardOfOblivion.passiveIDDisabled()){
 			GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready_worn"));
 		}
@@ -417,7 +463,16 @@ public class Belongings implements Iterable<Item> {
 	}
 	
 	public void uncurseEquipped() {
-		ScrollOfRemoveCurse.uncurse( owner, armor(), weapon(), artifact(), misc(), ring(), extraRing(), secondWep());
+		ArrayList<Item> worn = new ArrayList<>();
+		worn.add(armor());
+		worn.add(weapon());
+		worn.add(artifact());
+		worn.add(misc());
+		worn.add(ring());
+		worn.add(extraRing());
+		worn.add(secondWep());
+		for (int i = 0; i < ringSlots.length; i++) worn.add(ringSlot(i));
+		ScrollOfRemoveCurse.uncurse(owner, worn.toArray(new Item[0]));
 	}
 	
 	public Item randomUnequipped() {
@@ -449,7 +504,20 @@ public class Belongings implements Iterable<Item> {
 		
 		private Iterator<Item> backpackIterator = backpack.iterator();
 		
-		private Item[] equipped = {weapon, armor, artifact, misc, ring, secondWep, extraRing};
+		private Item[] equipped = makeEquippedSnapshot();
+
+		private Item[] makeEquippedSnapshot() {
+			Item[] all = new Item[7 + ringSlots.length];
+			all[0] = weapon;
+			all[1] = armor;
+			all[2] = artifact;
+			all[3] = misc;
+			all[4] = ring;
+			all[5] = secondWep;
+			all[6] = extraRing;
+			for (int i = 0; i < ringSlots.length; i++) all[i+7] = ringSlots[i];
+			return all;
+		}
 		private int backpackIndex = equipped.length;
 		
 		@Override
@@ -502,7 +570,11 @@ public class Belongings implements Iterable<Item> {
 				equipped[6] = extraRing = null;
 				break;
 			default:
-				backpackIterator.remove();
+				if (index >= 7 && index < 7 + ringSlots.length) {
+					equipped[index] = ringSlots[index - 7] = null;
+				} else {
+					backpackIterator.remove();
+				}
 			}
 		}
 	}
