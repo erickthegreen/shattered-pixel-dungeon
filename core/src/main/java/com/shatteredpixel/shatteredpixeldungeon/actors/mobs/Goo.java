@@ -63,6 +63,7 @@ public class Goo extends Mob {
 
 	private int pumpedUp = 0;
 	private int healInc = 1;
+	private int infernalOozePulse = 4;
 
 	@Override
 	public int damageRoll() {
@@ -101,6 +102,13 @@ public class Goo extends Mob {
 	@Override
 	public boolean act() {
 
+		// Novo pulso corrosivo exclusivo do Goo. Nao afeta outras fases do chefe.
+		if (state == HUNTING && Dungeon.hero != null && Dungeon.hero.isAlive()
+				&& Dungeon.level.distance(pos, Dungeon.hero.pos) <= 2
+				&& --infernalOozePulse <= 0) {
+			Buff.affect(Dungeon.hero, Ooze.class).set(Ooze.DURATION);
+			infernalOozePulse = 4;
+		}
 		if (state != HUNTING && pumpedUp > 0){
 			pumpedUp = 0;
 			sprite.idle();
