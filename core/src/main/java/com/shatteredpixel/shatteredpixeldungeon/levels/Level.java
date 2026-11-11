@@ -225,6 +225,16 @@ public abstract class Level implements Bundlable {
 
 			addItemToSpawn(Generator.random(Generator.Category.FOOD));
 
+			// Mod pessoal: todos os 12 tipos de aneis no primeiro andar.
+			if (Dungeon.depth == 1) {
+				for (Class<?> ringType : Generator.Category.RING.classes) {
+					com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring ring =
+							(com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring) Reflection.newInstance(ringType);
+					ring.identify();
+					addItemToSpawn(ring);
+				}
+			}
+
 			if (Dungeon.posNeeded()) {
 				Dungeon.LimitedDrops.STRENGTH_POTIONS.count++;
 				addItemToSpawn( new PotionOfStrength() );
