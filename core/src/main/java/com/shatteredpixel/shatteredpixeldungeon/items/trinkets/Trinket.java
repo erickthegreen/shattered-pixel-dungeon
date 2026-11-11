@@ -38,6 +38,14 @@ public abstract class Trinket extends Item {
 		unique = true;
 	}
 
+	// Keep the visible, persistent +1000 item level, but limit the effective
+	// effect level to +3: several vanilla trinkets divide by (level+1),
+	// index arrays of 4 elements, or compute probabilities that must be <=1.
+	@Override
+	public int buffedLvl() {
+		return Math.min(3, super.buffedLvl());
+	}
+
 	@Override
 	public boolean isUpgradable() {
 		return false;
