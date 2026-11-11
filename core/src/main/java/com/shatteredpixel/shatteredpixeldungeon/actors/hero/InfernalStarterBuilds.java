@@ -84,6 +84,12 @@ public final class InfernalStarterBuilds {
             }
         }
 
+        // Apply the starting Ring of Might's hit-point benefit immediately.
+        hero.updateHT(false);
+        if (hero.heroClass == HeroClass.DUELIST) {
+            Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
+        }
+
         // Existing Mimic Tooth is moved into this bag; all other trinkets join it.
         new InfernalTrinketPouch().collect();
         for (Class<?> trinketClass : Generator.Category.TRINKET.classes) {
