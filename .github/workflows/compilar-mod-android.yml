@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   android:
@@ -40,3 +40,16 @@ jobs:
           name: Shattered-Dungeon-Personalizado-APK
           path: android/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      - name: Publicar APK direto na pagina Releases
+        if: github.ref == 'refs/heads/mod/edicao-infernal-builds'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "infernal-builds-${{ github.run_number }}" \
+            "android/build/outputs/apk/debug/android-debug.apk#Shattered-Dungeon-Infernal-Builds.apk" \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "Shattered Dungeon - Edicao Infernal (Build ${{ github.run_number }})" \
+            --notes "APK Android de depuracao compilado automaticamente do commit $GITHUB_SHA. Nesta edicao: builds por classe, 17 amuletos +1000, 12 aneis, monstros 30x vida, 9x dano, 8x defesa e populacao 20x. Assinatura de depuracao: para atualizar APKs de outro build pode ser necessaria desinstalacao." \
+            --latest
