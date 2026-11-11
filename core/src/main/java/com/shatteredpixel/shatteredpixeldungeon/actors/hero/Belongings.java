@@ -84,6 +84,7 @@ public class Belongings implements Iterable<Item> {
 	public Artifact artifact = null;
 	public KindofMisc misc = null;
 	public Ring ring = null;
+	public Ring extraRing = null;
 
 	//used when thrown weapons temporary become the current weapon
 	public KindOfWeapon thrownWeapon = null;
@@ -155,6 +156,15 @@ public class Belongings implements Iterable<Item> {
 		}
 	}
 
+	// Terceiro anel, preservando o slot misto para aneis ou artefatos.
+	public Ring extraRing(){
+		if (!lostInventory() || (extraRing != null && extraRing.keptThroughLostInventory())){
+			return extraRing;
+		} else {
+			return null;
+		}
+	}
+
 	public KindOfWeapon secondWep(){
 		if (!lostInventory() || (secondWep != null && secondWep.keptThroughLostInventory())){
 			return secondWep;
@@ -170,6 +180,7 @@ public class Belongings implements Iterable<Item> {
 	private static final String ARTIFACT   = "artifact";
 	private static final String MISC       = "misc";
 	private static final String RING       = "ring";
+	private static final String EXTRA_RING = "extra_ring";
 
 	private static final String SECOND_WEP = "second_wep";
 
@@ -182,6 +193,7 @@ public class Belongings implements Iterable<Item> {
 		bundle.put( ARTIFACT, artifact );
 		bundle.put( MISC, misc );
 		bundle.put( RING, ring );
+		bundle.put( EXTRA_RING, extraRing );
 		bundle.put( SECOND_WEP, secondWep );
 	}
 
@@ -207,6 +219,9 @@ public class Belongings implements Iterable<Item> {
 		ring = (Ring) bundle.get(RING);
 		if (ring() != null)         ring().activate( owner );
 
+		extraRing = (Ring) bundle.get(EXTRA_RING);
+		if (extraRing() != null) extraRing().activate(owner);
+
 		secondWep = (KindOfWeapon) bundle.get(SECOND_WEP);
 		if (secondWep() != null)    secondWep().activate(owner);
 
@@ -220,6 +235,7 @@ public class Belongings implements Iterable<Item> {
 		artifact = null;
 		misc = null;
 		ring = null;
+		extraRing = null;
 	}
 	
 	public static void preview( GamesInProgress.Info info, Bundle bundle ) {
@@ -381,6 +397,14 @@ public class Belongings implements Iterable<Item> {
 				Badges.validateItemLevelAquired(ring());
 			}
 		}
+		if (extraRing() != null) {
+			if (ShardOfOblivion.passiveIDDisabled()){
+				extraRing().setIDReady();
+			} else {
+				extraRing().identify();
+				Badges.validateItemLevelAquired(extraRing());
+			}
+		}
 		if (ShardOfOblivion.passiveIDDisabled()){
 			GLog.p(Messages.get(ShardOfOblivion.class, "identify_ready_worn"));
 		}
@@ -393,7 +417,7 @@ public class Belongings implements Iterable<Item> {
 	}
 	
 	public void uncurseEquipped() {
-		ScrollOfRemoveCurse.uncurse( owner, armor(), weapon(), artifact(), misc(), ring(), secondWep());
+		ScrollOfRemoveCurse.uncurse( owner, armor(), weapon(), artifact(), misc(), ring(), extraRing(), secondWep());
 	}
 	
 	public Item randomUnequipped() {
@@ -425,7 +449,7 @@ public class Belongings implements Iterable<Item> {
 		
 		private Iterator<Item> backpackIterator = backpack.iterator();
 		
-		private Item[] equipped = {weapon, armor, artifact, misc, ring, secondWep};
+		private Item[] equipped = {weapon, armor, artifact, misc, ring, secondWep, extraRing};
 		private int backpackIndex = equipped.length;
 		
 		@Override
@@ -473,6 +497,9 @@ public class Belongings implements Iterable<Item> {
 				break;
 			case 5:
 				equipped[5] = secondWep = null;
+				break;
+			case 6:
+				equipped[6] = extraRing = null;
 				break;
 			default:
 				backpackIterator.remove();
