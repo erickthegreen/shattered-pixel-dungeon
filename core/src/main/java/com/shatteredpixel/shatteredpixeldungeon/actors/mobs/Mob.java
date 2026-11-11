@@ -149,9 +149,9 @@ public abstract class Mob extends Char {
 			// onAdd is called once; restored monsters retain their saved values.
 			float modifier = AscensionChallenge.statModifier(this);
 			if (alignment == Alignment.ENEMY) {
-				HT = (int)Math.max(1, Math.min(1_500_000_000d, HT * (double)modifier * 100d));
+				HT = (int)Math.max(1, Math.min(1_500_000_000d, HT * (double)modifier * 30d));
 				HP = Math.max(1, Math.min(HT, Math.round(HT * percent)));
-				defenseSkill = (int)Math.min(1_500_000_000L, Math.max(0L, defenseSkill * 100L));
+				defenseSkill = (int)Math.min(1_500_000_000L, Math.max(0L, defenseSkill * 8L));
 			} else {
 				HT = Math.max(1, Math.round(HT * modifier));
 				HP = Math.max(1, Math.min(HT, Math.round(HT * percent)));
