@@ -157,6 +157,8 @@ public enum HeroClass {
 
 		// Armadura de placas +100 para enfrentar os inimigos escalados.
 		hero.belongings.armor = (PlateArmor) new PlateArmor().level(100).identify();
+		// Diferentes equipamentos e aneis de inicio para as seis classes.
+		InfernalStarterBuilds.prepare(hero);
 
 		if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {
