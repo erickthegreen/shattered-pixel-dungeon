@@ -109,8 +109,14 @@ public class InfernalSmokeScene extends PixelScene {
             count++;
             // Story-scripted monsters, mimics and quest enemies may use their
             // original classes; all procedural rotations are checked above.
-            if (mob.EXP <= 0 && !mob.properties().contains(Char.Property.MINIBOSS)) {
-                throw new AssertionError("no XP: " + mob.getClass().getSimpleName() + " at depth " + depth);
+            // Bee and some puzzle summons intentionally grant 0 XP to prevent
+            // farming. Only special normal-spawn replacements must grant XP.
+            boolean xpRequired = MobSpawner.isInfernalSpecial(mob)
+                    || mob instanceof com.shatteredpixel.shatteredpixeldungeon.actors.mobs.PhantomPiranha
+                    || mob instanceof com.shatteredpixel.shatteredpixeldungeon.actors.mobs.ArmoredStatue;
+            if (xpRequired && mob.EXP <= 0) {
+                throw new AssertionError("special without XP: " + mob.getClass().getSimpleName()
+                        + " at depth " + depth);
             }
         }
         if (depth == 1 && count > 15) {
