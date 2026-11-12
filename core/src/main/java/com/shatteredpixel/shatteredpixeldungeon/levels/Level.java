@@ -457,6 +457,27 @@ public abstract class Level implements Bundlable {
 			}
 		}
 		
+		// Migrate old Infernal saves that may contain up to 160 blocking mobs.
+		// Keep quest minibosses and boss mechanics untouched. Ordinary enemies
+		// are replaced by the new exotic-only procedural spawns as rooms refill.
+		if (Dungeon.branch == 0 && Dungeon.depth >= 1 && Dungeon.depth <= 24
+				&& Dungeon.depth % 5 != 0) {
+			ArrayList<Mob> toRemove = new ArrayList<>();
+			int keptExotics = 0;
+			for (Mob mob : mobs) {
+				if (mob.alignment != Char.Alignment.ENEMY
+						|| mob.properties().contains(Char.Property.BOSS)
+						|| mob.properties().contains(Char.Property.MINIBOSS)) continue;
+				if (!MobSpawner.isInfernalSpecial(mob) || keptExotics >= 12) {
+					toRemove.add(mob);
+				} else {
+					keptExotics++;
+				}
+			}
+			mobs.removeAll(toRemove);
+			mobsToSpawn.clear(); // discard saved rotations containing ordinary mobs
+		}
+
 		collection = bundle.getCollection( BLOBS );
 		for (Bundlable b : collection) {
 			Blob blob = (Blob)b;
