@@ -23,6 +23,7 @@ package com.shatteredpixel.shatteredpixeldungeon.android;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -167,6 +168,12 @@ public class AndroidLauncher extends AndroidApplication {
 
 		Button.longClick = ViewConfiguration.getLongPressTimeout()/1000f;
 		
+		// Only emulator/debug builds can invoke the automated real-game smoke test.
+		boolean isDebuggable = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+		ShatteredPixelDungeon.infernalSmoke = isDebuggable && getIntent() != null
+				&& getIntent().getBooleanExtra("infernal_smoke", false);
+		ShatteredPixelDungeon.infernalSmokeDepth = getIntent() != null
+				? getIntent().getIntExtra("infernal_smoke_depth", 1) : 1;
 		initialize(new ShatteredPixelDungeon(support), config);
 		
 	}
