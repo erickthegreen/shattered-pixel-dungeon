@@ -43,8 +43,8 @@ public class MobSpawner extends Actor {
 			if (Dungeon.level.spawnMob(12)){
 				spend(Dungeon.level.respawnCooldown());
 			} else {
-				//try again in 1 turn
-				spend(TICK);
+				// A full/blocked map is not retried every frame or turn.
+				spend(Math.max(12f, Dungeon.level.respawnCooldown()/2f));
 			}
 
 		} else {
