@@ -55,9 +55,11 @@ public class MimicTooth extends Trinket {
 
 	public static float mimicChanceMultiplier( int level ){
 		if (level == -1){
-			return 11f; // x11 corresponde a um aumento de 1000% das aparicoes.
+			return 1f; // no trinket: normal mimic probability
 		} else {
-			return Math.max(11f, 1.5f + 0.5f*level);
+			// +1000 is kept as an item level, but effective effects are safely
+			// capped at +3 by Trinket.buffedLvl. Avoid turning EVERY chest into a mob.
+			return Math.min(3f, 1.5f + 0.5f*Math.max(0, level));
 		}
 	}
 
