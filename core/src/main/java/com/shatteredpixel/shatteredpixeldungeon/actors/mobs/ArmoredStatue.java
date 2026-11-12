@@ -45,6 +45,9 @@ public class ArmoredStatue extends Statue {
 
 		//double HP
 		HP = HT = 30 + Dungeon.depth * 10;
+		// Treasure-statue elites now award XP as the ordinary encounter they replace.
+		EXP = Math.max(1, (Dungeon.depth + 2)/3);
+		maxLvl = Math.max(maxLvl, Math.min(29, Dungeon.depth + 4));
 	}
 
 	@Override
