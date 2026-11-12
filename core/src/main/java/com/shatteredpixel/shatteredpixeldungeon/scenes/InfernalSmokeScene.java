@@ -91,6 +91,9 @@ public class InfernalSmokeScene extends PixelScene {
             Level level = Dungeon.newLevel();
             validateFloor(level, depthToRender);
             Dungeon.switchLevel(level, level.entrance());
+            // GameScene normally follows InterlevelScene, which supplies the
+            // transition mode. Set it explicitly in this debug-only test.
+            InterlevelScene.mode = InterlevelScene.Mode.DESCEND;
             Gdx.app.log(TAG, "PASS READY_TO_RENDER depth=" + depthToRender);
             ShatteredPixelDungeon.switchNoFade(GameScene.class);
         } catch (Throwable error) {
