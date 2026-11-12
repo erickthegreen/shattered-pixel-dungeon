@@ -42,6 +42,11 @@ public class PhantomPiranha extends Piranha {
 	{
 		spriteClass = PhantomPiranhaSprite.class;
 
+		// Original aquatic mobs give zero XP. The exotic version replaces
+		// ordinary encounters and must reward progression normally.
+		EXP = Math.max(1, (Dungeon.depth + 2)/3);
+		maxLvl = Math.max(maxLvl, Math.min(29, Dungeon.depth + 4));
+
 		loot = PhantomMeat.class;
 		lootChance = 1f;
 	}
