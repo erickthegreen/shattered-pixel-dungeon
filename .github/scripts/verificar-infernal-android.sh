@@ -3,7 +3,7 @@
 # this launches the APK, generates levels and starter inventories, renders
 # gameplay on two regions, and fails on a fatal logcat signal.
 set -euo pipefail
-APP="com.erick.shattereddungeon.personalizado.indev"
+APP="com.erick.shattereddungeon.personalizado.estavel"
 ACTIVITY="com.shatteredpixel.shatteredpixeldungeon.android.AndroidLauncher"
 APK="android/build/outputs/apk/debug/android-debug.apk"
 test -s "$APK"
