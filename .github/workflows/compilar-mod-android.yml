@@ -6,6 +6,7 @@ on:
       - mod/aneis-e-pergaminhos
       - mod/edicao-infernal
       - mod/edicao-infernal-builds
+      - mod/infernal-especiais-estavel
   workflow_dispatch:
 
 permissions:
@@ -34,12 +35,49 @@ jobs:
         run: |
           chmod +x ./gradlew
           ./gradlew :android:assembleDebug --no-daemon --stacktrace
+
+      - name: Habilitar aceleracao KVM para emulador Android
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel'
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Testar APK de verdade num emulador Android
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: default
+          profile: pixel_2
+          emulator-boot-timeout: 600
+          emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect
+          script: bash .github/scripts/verificar-infernal-android.sh
+
       - name: Publish APK
         uses: actions/upload-artifact@v4
         with:
           name: Shattered-Dungeon-Personalizado-APK
           path: android/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      - name: Publicar edicao estavel APENAS apos testes Android
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="infernal-especiais-estavel"
+          APK="android/build/outputs/apk/debug/android-debug.apk"
+          NOTES="Edicao Infernal corrigida: somente variantes especiais no spawn normal; 6 a 12 inimigos por andar e respawn controlado; XP equivalente aos monstros substituidos; arma/aneis por classe, 17 amuletos +1000; 30x HP, 9x dano, 8x defesa. Verificacao automatizada de geracao, inventarios e execucao no emulador Android."
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK" --clobber --repo "$GITHUB_REPOSITORY"
+            gh release edit "$TAG" --latest --title "Infernal - Somente Especiais (corrigida)" --notes "$NOTES" --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" "$APK" --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" --title "Infernal - Somente Especiais (corrigida)" \
+              --notes "$NOTES" --latest
+          fi
 
       - name: Publicar APK direto na pagina Releases
         if: github.ref == 'refs/heads/mod/edicao-infernal-builds'
