@@ -204,14 +204,8 @@ public class Statue extends Mob {
 	}
 
 	public static Statue random( boolean useDecks ){
-		Statue statue;
-		float altChance = 1/10f * RatSkull.exoticChanceMultiplier();
-		if (altChance > 0.1f) altChance = (altChance+0.1f)/2f; //rat skull is 1/2 as effective here
-		if (Random.Float() < altChance){
-			statue = new ArmoredStatue();
-		} else {
-			statue = new Statue();
-		}
+		// Infernal: statues in treasure rooms are always the exotic armored type.
+		Statue statue = new ArmoredStatue();
 
 		//calls to RNG vary based on statue type, which is influenced by rat skull
 		Random.pushGenerator(Random.Long());
