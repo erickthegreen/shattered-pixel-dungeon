@@ -96,6 +96,23 @@ public class MobSpawner extends Actor {
 		return mobs;
 	}
 
+	/** Is this an enemy which can legitimately appear in the new rare-only rotation? */
+	public static boolean isInfernalSpecial(Mob m) {
+		return m instanceof Albino
+				|| m instanceof GnollExile
+				|| m instanceof HermitCrab
+				|| m instanceof CausticSlime
+				|| m instanceof Bandit
+				|| m instanceof SpectralNecromancer
+				|| m instanceof ArmoredBrute
+				|| m instanceof DM201
+				|| m instanceof AbyssalDevourer
+				|| m instanceof Senior
+				|| m instanceof Elemental.ChaosElemental
+				|| m instanceof Acidic
+				|| m instanceof RipperDemon;
+	}
+
 	/**
 	 * Every special creature gives XP comparable to the regular enemy whose
 	 * spawn slot it replaces. Prevent 0 XP or 24-XP elite farming on early floors.
