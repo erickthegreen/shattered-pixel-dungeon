@@ -552,6 +552,8 @@ public abstract class Level implements Bundlable {
 		}
 
 		Mob m = Reflection.newInstance(mobsToSpawn.remove(0));
+		// No regular mob in procedural rotations. Each exotic grants level-appropriate XP.
+		MobSpawner.adjustSpecialXP(m, Dungeon.depth);
 		ChampionEnemy.rollForChampion(m);
 		return m;
 	}
