@@ -106,9 +106,9 @@ public abstract class ChampionEnemy extends Buff {
 			case 5:             buffCls = Growing.class;      break;
 		}
 
-		// Aumento de 1000% sobre a chance base de ~1/8 para inimigos campeoes.
-		// A probabilidade final e limitada a 100% e nao exige ativar o desafio.
-		if (Random.Float() < Math.min(1f, 11f / (8f - Math.min(20, Dungeon.scalingDepth()-1)/10f))) {
+		// All procedural enemies are already exotic variants. Only 35% need
+		// an additional champion aura; 100% created too much visual/combat chaos.
+		if (Random.Float() < 0.35f) {
 
 			//we block certain standout enemies on floor <10 from becoming champions
 			if (m instanceof Crab  && Dungeon.scalingDepth() <= 3) return;
