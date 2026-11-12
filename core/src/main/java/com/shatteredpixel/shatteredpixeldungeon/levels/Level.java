@@ -777,7 +777,8 @@ public abstract class Level implements Bundlable {
 		} else {
 			cooldown = TIME_TO_RESPAWN;
 		}
-		return Math.max(2f, cooldown / 20f / DimensionalSundial.spawnMultiplierAtCurrentTime()); // +1000% respawn, no busy loop
+		// Keep a generous interval even with the +1000 trinket collection.
+		return Math.max(35f, cooldown / DimensionalSundial.spawnMultiplierAtCurrentTime());
 	}
 
 	public boolean spawnMob(int disLimit){
