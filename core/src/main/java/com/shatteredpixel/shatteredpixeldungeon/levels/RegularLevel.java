@@ -206,20 +206,20 @@ public abstract class RegularLevel extends Level {
 	public int mobLimit() {
 		if (Dungeon.depth <= 1){
 			if (!Statistics.amuletObtained) return 0;
-			else                            return 160;
+			else                            return 8;
 		}
 
-		int mobs = 3 + Dungeon.depth % 5 + Random.Int(3);
-		if (feeling == Feeling.LARGE){
-			mobs = (int)Math.ceil(mobs * 1.33f);
-		}
-		return Math.min(160, mobs * 20); // x20 com limite de 160 criaturas por andar
+		// Population is intentionally sparse: every normal spawn is now an elite,
+		// so more than a dozen enemies would obstruct rooms and passages.
+		int mobs = 7 + Dungeon.depth % 3;
+		if (feeling == Feeling.LARGE) mobs += 2;
+		return Math.min(12, mobs);
 	}
 	
 	@Override
 	protected void createMobs() {
 		//on floor 1, 8 pre-set mobs are created so the player can get level 2.
-		int mobsToSpawn = Dungeon.depth == 1 ? 160 : mobLimit(); // x20 do primeiro andar, limitado por espaco
+		int mobsToSpawn = Dungeon.depth == 1 ? 6 : mobLimit();
 		int failedPlacements = 0;
 
 		ArrayList<Room> stdRooms = new ArrayList<>();
@@ -231,6 +231,9 @@ public abstract class RegularLevel extends Level {
 			}
 		}
 		Random.shuffle(stdRooms);
+		// Special or quest levels can lack standard rooms; never call next() on
+		// an empty iterator (a fatal exception during dungeon generation).
+		if (stdRooms.isEmpty()) return;
 		Iterator<Room> stdRoomIter = stdRooms.iterator();
 
 		//enemies cannot be within a 8-tile FOV or 8-tile open space walk from the entrance
