@@ -46,10 +46,17 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "infernal-builds-${{ github.run_number }}" \
-            "android/build/outputs/apk/debug/android-debug.apk#Shattered-Dungeon-Infernal-Builds.apk" \
-            --repo "$GITHUB_REPOSITORY" \
-            --target "$GITHUB_SHA" \
-            --title "Shattered Dungeon - Edicao Infernal (Build ${{ github.run_number }})" \
-            --notes "APK Android de depuracao compilado automaticamente do commit $GITHUB_SHA. Nesta edicao: builds por classe, 17 amuletos +1000, 12 aneis, monstros 30x vida, 9x dano, 8x defesa e populacao 20x. Assinatura de depuracao: para atualizar APKs de outro build pode ser necessaria desinstalacao." \
-            --latest
+          TAG="infernal-builds"
+          ASSET="android/build/outputs/apk/debug/android-debug.apk#Shattered-Dungeon-Infernal-Builds.apk"
+          NOTES="Compilado do commit $GITHUB_SHA. Builds por classe, 17 amuletos +1000, 12 aneis, monstros com 30x vida, 9x dano, 8x defesa e populacao 20x. APK debug pode exigir desinstalacao por divergencia de assinatura."
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$ASSET" --clobber --repo "$GITHUB_REPOSITORY"
+            gh release edit "$TAG" --latest --title "Shattered Dungeon - Edicao Infernal" --notes "$NOTES" --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" "$ASSET" \
+              --repo "$GITHUB_REPOSITORY" \
+              --target "$GITHUB_SHA" \
+              --title "Shattered Dungeon - Edicao Infernal" \
+              --notes "$NOTES" \
+              --latest
+          fi
