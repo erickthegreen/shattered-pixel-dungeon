@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon;
 
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
+import com.shatteredpixel.shatteredpixeldungeon.scenes.InfernalSmokeScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.PixelScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.TitleScene;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.WelcomeScene;
@@ -32,6 +33,10 @@ import com.watabou.utils.DeviceCompat;
 import com.watabou.utils.PlatformSupport;
 
 public class ShatteredPixelDungeon extends Game {
+
+	// Activated solely from a debuggable Android build via explicit ADB intent.
+	public static boolean infernalSmoke = false;
+	public static int infernalSmokeDepth = 1;
 
 	//rankings from v1.2.3 and older use a different score formula, so this reference is kept
 	public static final int v1_2_3 = 628;
@@ -46,7 +51,7 @@ public class ShatteredPixelDungeon extends Game {
 	public static final int v4_0_0 = 911;
 	
 	public ShatteredPixelDungeon( PlatformSupport platform ) {
-		super( sceneClass == null ? WelcomeScene.class : sceneClass, platform );
+		super( infernalSmoke ? InfernalSmokeScene.class : (sceneClass == null ? WelcomeScene.class : sceneClass), platform );
 
 		//pre-v3.3.0
 		com.watabou.utils.Bundle.addAlias(
