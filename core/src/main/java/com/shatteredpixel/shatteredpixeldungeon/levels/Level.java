@@ -475,7 +475,6 @@ public abstract class Level implements Bundlable {
 				}
 			}
 			mobs.removeAll(toRemove);
-			mobsToSpawn.clear(); // discard saved rotations containing ordinary mobs
 		}
 
 		collection = bundle.getCollection( BLOBS );
@@ -493,6 +492,12 @@ public abstract class Level implements Bundlable {
 			for (Class<? extends Mob> mob : bundle.getClassArray("mobs_to_spawn")) {
 				if (mob != null) mobsToSpawn.add(mob);
 			}
+		}
+
+		// Old saves may contain stale normal-monster class rotations.
+		if (Dungeon.branch == 0 && Dungeon.depth >= 1 && Dungeon.depth <= 24
+				&& Dungeon.depth % 5 != 0) {
+			mobsToSpawn.clear();
 		}
 
 		if (bundle.contains( "respawner" )){
