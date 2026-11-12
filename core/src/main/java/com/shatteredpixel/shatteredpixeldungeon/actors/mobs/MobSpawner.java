@@ -59,16 +59,52 @@ public class MobSpawner extends Actor {
 		spend(Dungeon.level.respawnCooldown());
 	}
 
+	/**
+	 * Edicao Infernal estavel: only exotic/rare enemy classes are generated
+	 * by normal dungeon spawning. Normal creatures still exist for scripted
+	 * quests and boss phases so core game mechanics are not broken.
+	 *
+	 * Levels 5, 10, 15, 20 and 25 have their own boss generation.
+	 */
 	public static ArrayList<Class<? extends Mob>> getMobRotation(int depth ){
-		ArrayList<Class<? extends Mob>> mobs = standardMobRotation( depth );
-		addRareMobs(depth, mobs);
-		// Elite original: pertence a rotacao normal a partir do terceiro andar.
-		if (depth >= 3 && Random.Float() < 0.5f) {
-			mobs.add(AbyssalDevourer.class);
+		ArrayList<Class<? extends Mob>> mobs = new ArrayList<>();
+		if (depth <= 1){
+			mobs.addAll(Arrays.asList(Albino.class, Albino.class, Albino.class));
+		} else if (depth <= 2){
+			mobs.addAll(Arrays.asList(Albino.class, Albino.class, GnollExile.class));
+		} else if (depth <= 3){
+			mobs.addAll(Arrays.asList(Albino.class, GnollExile.class, HermitCrab.class));
+		} else if (depth <= 5){
+			mobs.addAll(Arrays.asList(GnollExile.class, HermitCrab.class, CausticSlime.class));
+		} else if (depth <= 10){
+			// Prison elites: disabling ordinary skeletons, thieves, guards, DM-100.
+			mobs.addAll(Arrays.asList(Bandit.class, Bandit.class, SpectralNecromancer.class));
+		} else if (depth <= 15){
+			// Caverns elites: resistant, mechanical and abyssal variants.
+			mobs.addAll(Arrays.asList(ArmoredBrute.class, ArmoredBrute.class, DM201.class));
+			if (depth >= 12) mobs.add(AbyssalDevourer.class);
+		} else if (depth <= 20){
+			// Dwarven City elites.
+			mobs.addAll(Arrays.asList(Senior.class, Senior.class, Elemental.ChaosElemental.class));
+			if (depth >= 18) mobs.add(AbyssalDevourer.class);
+		} else {
+			// Demon Halls elites.
+			mobs.addAll(Arrays.asList(Acidic.class, RipperDemon.class, Acidic.class));
+			if (depth >= 22) mobs.add(AbyssalDevourer.class);
 		}
-		swapMobAlts(mobs);
 		Random.shuffle(mobs);
 		return mobs;
+	}
+
+	/**
+	 * Every special creature gives XP comparable to the regular enemy whose
+	 * spawn slot it replaces. Prevent 0 XP or 24-XP elite farming on early floors.
+	 */
+	public static void adjustSpecialXP(Mob mob, int depth) {
+		int minimum = Math.max(1, (depth + 2)/3);
+		int maximum = Math.max(minimum, 3 + depth);
+		mob.EXP = Math.max(minimum, Math.min(mob.EXP, maximum));
+		mob.maxLvl = Math.max(mob.maxLvl, Math.min(29, depth + 4));
 	}
 
 	//returns a rotation of standard mobs, unshuffled.
