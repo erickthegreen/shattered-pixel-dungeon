@@ -204,11 +204,8 @@ public class Piranha extends Mob {
 	}
 
 	public static Piranha random(){
-		float altChance = 1/50f * RatSkull.exoticChanceMultiplier();
-		if (Random.Float() < altChance){
-			return new PhantomPiranha();
-		} else {
-			return new Piranha();
-		}
+		// Infernal: aquatic encounters are exclusively the exotic variant.
+		// This applies to scripted piranha pools, not only MobSpawner rotations.
+		return new PhantomPiranha();
 	}
 }
