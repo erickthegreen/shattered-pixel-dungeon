@@ -87,5 +87,6 @@ check_depth () {
 }
 
 check_depth 1
+check_depth 5
 check_depth 12
 echo "INFERNAL_ANDROID_SMOKE_COMPLETE"

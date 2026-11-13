@@ -104,6 +104,9 @@ public class Goo extends Mob {
 
 		// Novo pulso corrosivo exclusivo do Goo. Nao afeta outras fases do chefe.
 		if (state == HUNTING && Dungeon.hero != null && Dungeon.hero.isAlive()
+                && !(Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel
+                   && ((com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel)Dungeon.level)
+                      .isInfernalSafeZone(Dungeon.hero.pos))
 				&& Dungeon.level.distance(pos, Dungeon.hero.pos) <= 2
 				&& --infernalOozePulse <= 0) {
 			Buff.affect(Dungeon.hero, Ooze.class).set(Ooze.DURATION);

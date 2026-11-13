@@ -845,7 +845,17 @@ public abstract class Char extends Actor {
 	}
 	
 	public void damage( int dmg, Object src ) {
-		
+        // True boss-floor safe zone: blocks physical, spell, trap and DOT damage,
+        // in both directions. Mobs also refuse to path into the antechamber.
+        if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel
+                && Dungeon.hero != null) {
+            com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel safe =
+                (com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel)Dungeon.level;
+            if (this == Dungeon.hero && safe.isInfernalSafeZone(pos)) return;
+            if (this instanceof Mob && safe.isInfernalSafeZone(Dungeon.hero.pos)
+                    && !safe.isInfernalSafeZone(pos)) return;
+        }
+
 		if (!isAlive() || dmg < 0) {
 			return;
 		}
