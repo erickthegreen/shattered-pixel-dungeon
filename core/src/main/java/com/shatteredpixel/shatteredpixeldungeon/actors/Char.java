@@ -396,7 +396,7 @@ public abstract class Char extends Actor {
 			
 			int dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
 			if (enemy instanceof Mob && enemy.alignment == Alignment.ENEMY) {
-				dr = (int)Math.min(1_500_000_000L, Math.max(0L, dr * 5L));
+				dr = (int)Math.min(1_500_000_000L, Math.max(0L, Math.round(dr * 1.2f)));
 			}
 			
 			if (this instanceof Hero){
@@ -428,7 +428,7 @@ public abstract class Char extends Actor {
 			dmg = dmg*dmgMulti;
 			// Scale every ordinary monster melee attack, without overflowing int.
 			if (this instanceof Mob && alignment == Alignment.ENEMY) {
-				dmg = Math.min(1_500_000_000f, dmg * 6f);
+				dmg = Math.min(1_500_000_000f, dmg * 2f);
 			}
 
 			//flat damage bonus is affected by multipliers
@@ -509,7 +509,14 @@ public abstract class Char extends Actor {
 					effectiveDamage *= 1.33f;
 				}
 
-				effectiveDamage = attackProc(enemy, effectiveDamage);
+				// Even with improved armor, an enemy that lands a hit should never
+                // deal zero damage. Stronger floors have a slightly higher floor.
+                if (this instanceof Mob && enemy instanceof Hero
+                        && alignment == Alignment.ENEMY) {
+                    int minimumDamage = 1 + Math.max(0, Dungeon.depth-1)/5;
+                    effectiveDamage = Math.max(minimumDamage, effectiveDamage);
+                }
+                effectiveDamage = attackProc(enemy, effectiveDamage);
 			}
 			if (visibleFight) {
 				if (effectiveDamage > 0 || !enemy.blockSound(Random.Float(0.96f, 1.05f))) {
@@ -633,7 +640,7 @@ public abstract class Char extends Actor {
 	public static boolean hit( Char attacker, Char defender, float accMulti, boolean magic ) {
 		float acuStat = attacker.attackSkill( defender );
 		if (attacker instanceof Mob && attacker.alignment == Alignment.ENEMY) {
-			acuStat = Math.min(1_500_000_000f, acuStat * 5f);
+			acuStat = Math.min(1_500_000_000f, acuStat * 1.35f);
 		}
 		float defStat = defender.defenseSkill( attacker );
 

@@ -123,13 +123,13 @@ public enum HeroClass {
 		new ScrollOfIdentify().identify();
 
 		// Mod pessoal: equipamentos especiais a cada partida nova.
-		new ScrollOfUpgrade().quantity(1000).identify().collect();
-		new ScrollOfTransmutation().quantity(1000).identify().collect();
+		new ScrollOfUpgrade().quantity(3).identify().collect();
+		new ScrollOfTransmutation().quantity(1).identify().collect();
         new PotionOfExperience().quantity(100).identify().collect();
-		new StoneOfAugmentation().quantity(1000).identify().collect();
-		new StoneOfEnchantment().quantity(1000).identify().collect();
+		new StoneOfAugmentation().quantity(2).identify().collect();
+		new StoneOfEnchantment().quantity(2).identify().collect();
 		// Nivel +1000, mesmo que o limite de criacao normal do dente seja +3.
-		new MimicTooth().level(1000).identify().collect();
+		// Mimic Tooth and other trinkets are handled exclusively by the starter build.
 
 		switch (this) {
 			case WARRIOR:
@@ -158,7 +158,9 @@ public enum HeroClass {
 		}
 
 		// Armadura de placas +100 para enfrentar os inimigos escalados.
-		hero.belongings.armor = (PlateArmor) new PlateArmor().level(100).identify();
+		// Preserve class-specific Cloth Armor and its seals; huge plate armor caused zero incoming damage.
+        hero.belongings.armor.level(2);
+        hero.belongings.armor.identify();
 		// Diferentes equipamentos e aneis de inicio para as seis classes.
 		InfernalStarterBuilds.prepare(hero);
 

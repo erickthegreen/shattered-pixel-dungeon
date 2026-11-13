@@ -40,11 +40,11 @@ public class InfernalSmokeScene extends PixelScene {
                     throw new AssertionError(heroClass + ": expected 8 trinkets, got " + trinkets.size());
                 }
                 for (Trinket trinket : trinkets) {
-                    if (trinket.level() != 1000 || trinket.buffedLvl() > 3) {
+                    if (trinket.level() != 2 || trinket.buffedLvl() > 2) {
                         throw new AssertionError(heroClass + ": unsafe trinket " + trinket.name());
                     }
                 }
-                if (Dungeon.hero.belongings.armor == null || Dungeon.hero.belongings.armor.level() != 100) {
+                if (Dungeon.hero.belongings.armor == null || Dungeon.hero.belongings.armor.level() != 2) {
                     throw new AssertionError(heroClass + ": missing starting +100 plate");
                 }
                 int rings = (Dungeon.hero.belongings.ring == null ? 0 : 1)
@@ -52,8 +52,8 @@ public class InfernalSmokeScene extends PixelScene {
                 for (int i=0; i<Dungeon.hero.belongings.ringSlots.length; i++) {
                     if (Dungeon.hero.belongings.ringSlots[i] != null) rings++;
                 }
-                if (rings < 5) {
-                    throw new AssertionError(heroClass + ": expected five equipped upgraded rings, got " + rings);
+                if (rings != 2) {
+                    throw new AssertionError(heroClass + ": expected exactly two balanced starter rings, got " + rings);
                 }
 
                 // Floor 1 creation directly exercises the user's crashing

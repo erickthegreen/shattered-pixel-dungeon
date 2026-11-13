@@ -43,7 +43,7 @@ public abstract class Trinket extends Item {
 	// index arrays of 4 elements, or compute probabilities that must be <=1.
 	@Override
 	public int buffedLvl() {
-		return Math.min(3, super.buffedLvl());
+		return Math.min(2, super.buffedLvl());
 	}
 
 	@Override
