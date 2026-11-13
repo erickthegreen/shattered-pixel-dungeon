@@ -8,7 +8,8 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Cripple;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Ooze;
 import com.shatteredpixel.shatteredpixeldungeon.scenes.GameScene;
-import com.shatteredpixel.shatteredpixeldungeon.sprites.TibiaSewerSprites;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.TibiaAllSprites;
+import com.shatteredpixel.shatteredpixeldungeon.sprites.TibiaBossSprites;
 import com.watabou.utils.Bundle;
 import com.watabou.utils.PathFinder;
 import com.watabou.utils.Random;
@@ -36,6 +37,17 @@ public final class TibiaSewers {
         }
 
         @Override public String name() { return tibiaName; }
+        @Override public String description() {
+            switch (tibiaName) {
+                case "Rat": return "Rato de esgoto pequeno, mas rápido.";
+                case "Rotworm": return "Verme subterrâneo resistente com presas duras.";
+                case "Carrion Worm": return "Verme carniceiro que usa uma mordida contaminante.";
+                case "Troll": return "Troll de caverna armado com uma clava pesada.";
+                case "Minotaur": return "Guerreiro minotauro com força devastadora.";
+                case "Slime": return "Gosma viva que se divide quando ferida.";
+                default: return "Uma criatura dos antigos esgotos.";
+            }
+        }
         @Override public int damageRoll() { return Random.NormalIntRange(lowDamage, highDamage); }
         @Override public int attackSkill(Char target) { return accuracy; }
         @Override public int drRoll() { return super.drRoll() + Random.NormalIntRange(0, maximumDR); }
@@ -43,13 +55,13 @@ public final class TibiaSewers {
 
     public static class Rat extends Creature {
         { setup("Rat", 12, 1, 2, 3, 8, 1, 1);
-          spriteClass = TibiaSewerSprites.Rat.class;
+          spriteClass = TibiaAllSprites.Rat.class;
           baseSpeed = 1.25f; }
     }
 
     public static class Rotworm extends Creature {
         { setup("Rotworm", 28, 2, 5, 4, 10, 2, 2);
-          spriteClass = TibiaSewerSprites.Rotworm.class;
+          spriteClass = TibiaAllSprites.Rotworm.class;
           baseSpeed = 0.85f; }
 
         @Override public int attackProc(Char victim, int damage) {
@@ -63,7 +75,7 @@ public final class TibiaSewers {
 
     public static class CarrionWorm extends Creature {
         { setup("Carrion Worm", 44, 3, 6, 5, 11, 3, 3);
-          spriteClass = TibiaSewerSprites.CarrionWorm.class; }
+          spriteClass = TibiaAllSprites.CarrionWorm.class; }
 
         @Override public int attackProc(Char victim, int damage) {
             damage = super.attackProc(victim, damage);
@@ -76,7 +88,7 @@ public final class TibiaSewers {
 
     public static class Troll extends Creature {
         { setup("Troll", 34, 3, 7, 4, 11, 3, 3);
-          spriteClass = TibiaSewerSprites.Troll.class;
+          spriteClass = TibiaAllSprites.Troll.class;
           baseSpeed = 0.85f; }
 
         @Override public int damageRoll() {
@@ -86,7 +98,7 @@ public final class TibiaSewers {
 
     public static class Minotaur extends Creature {
         { setup("Minotaur", 64, 4, 9, 6, 13, 5, 5);
-          spriteClass = TibiaSewerSprites.Minotaur.class; }
+          spriteClass = TibiaAllSprites.Minotaur.class; }
 
         @Override public int attackProc(Char victim, int damage) {
             damage = super.attackProc(victim, damage);
@@ -100,7 +112,7 @@ public final class TibiaSewers {
     public static class Slime extends Creature {
         private boolean hasSplit;
         { setup("Slime", 80, 3, 8, 5, 12, 4, 6);
-          spriteClass = TibiaSewerSprites.Slime.class; }
+          spriteClass = TibiaAllSprites.Slime.class; }
 
         @Override public void damage(int dmg, Object src) {
             super.damage(dmg, src);
@@ -135,7 +147,7 @@ public final class TibiaSewers {
 
     public static class SlimeFragment extends Creature {
         { setup("Fragmento de Slime", 12, 1, 2, 2, 7, 1, 0);
-          spriteClass = TibiaSewerSprites.Slime.class;
+          spriteClass = TibiaAllSprites.Slime.class;
           lootChance = 0f;
           maxLvl = 0; }
     }
@@ -143,10 +155,13 @@ public final class TibiaSewers {
     /** Subclassing Goo preserves boss keys, badges, phase transitions and
      * the floor-6 exit. The visuals and poison are new. */
     public static class DeadSlime extends Goo {
-        { HP = HT = 480;
+        { HP = HT = 180;
           EXP = 20;
-          spriteClass = TibiaSewerSprites.DeadSlime.class; }
+          spriteClass = TibiaBossSprites.DeadSlime.class; }
         @Override public String name(){ return "Dead Slime"; }
+        @Override public String description(){
+            return "O Dead Slime é uma gosma morta-viva com um núcleo venenoso. Seu corpo libera ondas de ácido.";
+        }
         @Override public int attackProc(Char victim, int damage){
             damage = super.attackProc(victim, damage);
             if (damage > 0 && Random.Int(3) == 0) {

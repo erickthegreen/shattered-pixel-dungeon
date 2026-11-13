@@ -86,29 +86,54 @@ public class MobSpawner extends Actor {
                     TibiaSewers.CarrionWorm.class, TibiaSewers.CarrionWorm.class,
                     TibiaSewers.Troll.class, TibiaSewers.Minotaur.class,
                     TibiaSewers.Minotaur.class, TibiaSewers.Slime.class));
-		} else if (depth <= 10){
-			// Prison elites: disabling ordinary skeletons, thieves, guards, DM-100.
-			mobs.addAll(Arrays.asList(Bandit.class, Bandit.class, SpectralNecromancer.class));
-		} else if (depth <= 15){
-			// Caverns elites: resistant, mechanical and abyssal variants.
-			mobs.addAll(Arrays.asList(ArmoredBrute.class, ArmoredBrute.class, DM201.class));
-			if (depth >= 12) mobs.add(AbyssalDevourer.class);
-		} else if (depth <= 20){
-			// Dwarven City elites.
-			mobs.addAll(Arrays.asList(Senior.class, Senior.class, Elemental.ChaosElemental.class));
-			if (depth >= 18) mobs.add(AbyssalDevourer.class);
-		} else {
-			// Demon Halls elites.
-			mobs.addAll(Arrays.asList(Acidic.class, RipperDemon.class, Acidic.class));
-			if (depth >= 22) mobs.add(AbyssalDevourer.class);
-		}
+		 } else if (depth <= 6) {
+            mobs.addAll(Arrays.asList(Bandit.class, TibiaDeeps.DemonSkeleton.class, TibiaDeeps.DemonSkeleton.class));
+        } else if (depth <= 7) {
+            mobs.addAll(Arrays.asList(Bandit.class, TibiaDeeps.DemonSkeleton.class, TibiaDeeps.Dragon.class));
+        } else if (depth <= 8) {
+            mobs.addAll(Arrays.asList(Bandit.class, TibiaDeeps.DemonSkeleton.class,
+                    TibiaDeeps.Dragon.class, TibiaDeeps.DragonLord.class, TibiaDeeps.Necromancer.class));
+        } else if (depth <= 10) {
+            mobs.addAll(Arrays.asList(Bandit.class, TibiaDeeps.DragonLord.class,
+                    TibiaDeeps.Necromancer.class, TibiaDeeps.BlackKnight.class));
+        } else if (depth <= 11) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.Dwarf.class, TibiaDeeps.Dwarf.class,
+                    TibiaDeeps.DwarfSoldier.class));
+        } else if (depth <= 12) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.Dwarf.class, TibiaDeeps.DwarfSoldier.class,
+                    TibiaDeeps.DwarfGuard.class));
+        } else if (depth <= 14) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.DwarfSoldier.class, TibiaDeeps.DwarfGuard.class,
+                    TibiaDeeps.DwarfGuard.class, TibiaDeeps.DwarfGeomancer.class));
+        } else if (depth <= 15) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.DwarfGuard.class, TibiaDeeps.DwarfGeomancer.class));
+        } else if (depth <= 17) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.Dwarf.class, TibiaDeeps.DwarfSoldier.class,
+                    TibiaDeeps.DwarfGuard.class, TibiaDeeps.DwarfGeomancer.class));
+        } else if (depth <= 20) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.DwarfSoldier.class, TibiaDeeps.DwarfGuard.class,
+                    TibiaDeeps.DwarfGuard.class, TibiaDeeps.DwarfGeomancer.class));
+        } else if (depth <= 21) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.DemonSkeleton.class, TibiaDeeps.Demon.class,
+                    TibiaDeeps.Warlock.class));
+        } else if (depth <= 22) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.Demon.class, TibiaDeeps.ElderDemonSkeleton.class,
+                    TibiaDeeps.Behemoth.class));
+        } else if (depth <= 23) {
+            mobs.addAll(Arrays.asList(TibiaDeeps.Demon.class, TibiaDeeps.ElderDemonSkeleton.class,
+                    TibiaDeeps.Behemoth.class, TibiaDeeps.DemonKnight.class));
+        } else {
+            mobs.addAll(Arrays.asList(TibiaDeeps.Demon.class, TibiaDeeps.Behemoth.class,
+                    TibiaDeeps.DemonKnight.class, TibiaDeeps.AncientDragon.class));
+        }
 		Random.shuffle(mobs);
 		return mobs;
 	}
 
 	/** Is this an enemy which can legitimately appear in the new rare-only rotation? */
 	public static boolean isInfernalSpecial(Mob m) {
-		return m instanceof TibiaSewers.Creature
+		return m instanceof TibiaDeeps.Creature
+                || m instanceof TibiaSewers.Creature
                 || m instanceof TibiaSewers.DeadSlime
                 || m instanceof Albino
 				|| m instanceof GnollExile
