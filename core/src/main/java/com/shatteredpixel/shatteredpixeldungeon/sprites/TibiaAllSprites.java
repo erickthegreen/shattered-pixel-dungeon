@@ -22,6 +22,14 @@ public final class TibiaAllSprites {
             zap = attack.clone();
             die = new Animation(7,false);
             die.frames(film,i+3);
+            // Small monsters remain small; elite creatures and dragons look imposing.
+            float[] visualSizes = {
+                0.68f,0.79f,0.86f,0.96f,1.02f,0.78f,
+                0.97f,0.91f,1.03f,1.10f,0.94f,1.05f,
+                0.85f,0.90f,1.02f,0.93f,1.06f,1.11f,
+                0.98f,0.95f,1.12f,1.13f
+            };
+            scale.set(visualSizes[row],visualSizes[row]);
             play(idle);
         }
     }

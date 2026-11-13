@@ -8,6 +8,7 @@ on:
       - mod/edicao-infernal-builds
       - mod/infernal-especiais-estavel
       - mod/tibia-1-jogavel
+      - mod/tibia-2-equilibrio-25-andar
   workflow_dispatch:
 
 permissions:
@@ -38,14 +39,14 @@ jobs:
           ./gradlew :android:assembleDebug --no-daemon --stacktrace
 
       - name: Habilitar aceleracao KVM para emulador Android
-        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel'
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel' || github.ref == 'refs/heads/mod/tibia-2-equilibrio-25-andar'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
       - name: Testar APK de verdade num emulador Android
-        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel'
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel' || github.ref == 'refs/heads/mod/tibia-2-equilibrio-25-andar'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
@@ -57,7 +58,7 @@ jobs:
           script: bash .github/scripts/verificar-infernal-android.sh
 
       - name: Testar a edicao no Android 16 (API 36)
-        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel'
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel' || github.ref == 'refs/heads/mod/tibia-2-equilibrio-25-andar'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -74,6 +75,22 @@ jobs:
           name: Shattered-Dungeon-Personalizado-APK
           path: android/build/outputs/apk/debug/*.apk
           if-no-files-found: error
+
+      - name: Publicar Tibia 2.0 apenas apos testes Android 11 e 16
+        if: github.ref == 'refs/heads/mod/tibia-2-equilibrio-25-andar'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="tibia-2-25-andares"
+          APK="android/build/outputs/apk/debug/android-debug.apk"
+          NOTES="Tibia x Shattered 2.0: 22 criaturas com novos sprites em pixel art, criaturas e chefes tematicos do 1 ao 25, equipamento inicial equilibrado (armadura/armas +2, dois aneis +1), 100 pocoes de XP, 8 trinkets +2, ataques inimigos com dano real, arenas seguras nos chefes 5 e 10. Teste automatico em Android 11 e 16."
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK" --clobber --repo "$GITHUB_REPOSITORY"
+            gh release edit "$TAG" --latest --title "Tibia x Shattered 2.0 - 25 Andares" --notes "$NOTES" --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" "$APK" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "Tibia x Shattered 2.0 - 25 Andares" --notes "$NOTES" --latest
+          fi
 
       - name: Publicar edicao estavel APENAS apos testes Android
         if: github.ref == 'refs/heads/mod/infernal-especiais-estavel'

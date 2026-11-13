@@ -3,7 +3,7 @@
 # this launches the APK, generates levels and starter inventories, renders
 # gameplay on two regions, and fails on a fatal logcat signal.
 set -euo pipefail
-APP="com.erick.shattereddungeon.personalizado.tibia"
+APP="com.erick.shattereddungeon.personalizado.tibia2"
 ACTIVITY="com.shatteredpixel.shatteredpixeldungeon.android.AndroidLauncher"
 APK="android/build/outputs/apk/debug/android-debug.apk"
 test -s "$APK"
@@ -88,5 +88,8 @@ check_depth () {
 
 check_depth 1
 check_depth 5
+check_depth 10
 check_depth 12
+check_depth 20
+check_depth 25
 echo "INFERNAL_ANDROID_SMOKE_COMPLETE"

@@ -14,6 +14,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MobSpawner;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TibiaSewers;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TibiaDeeps;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 
@@ -27,7 +28,7 @@ public class InfernalSmokeScene extends PixelScene {
     public void create() {
         super.create();
         try {
-            int[] checkDepths = {1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 14, 16, 18, 19, 21, 22, 24};
+            int[] checkDepths = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 
             for (HeroClass heroClass : HeroClass.values()) {
                 Dungeon.seed = 87897L + heroClass.ordinal();

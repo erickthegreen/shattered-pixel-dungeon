@@ -11,7 +11,7 @@ buildscript {
 allprojects {
 
     ext {
-        appName = 'Shattered Tibia 1.0'
+        appName = 'Shattered Tibia 2.0'
         appPackageName = 'com.erick.shattereddungeon.personalizado'
 
         //Full releases gets +2 on version code, needed for an F-Droid quirk

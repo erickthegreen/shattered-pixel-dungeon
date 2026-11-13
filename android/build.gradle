@@ -25,7 +25,7 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ".tibia"
+            applicationIdSuffix ".tibia2"
             versionNameSuffix '-INDEV'
             dependencies {
                 debugImplementation project(':services:updates:debugUpdates')
