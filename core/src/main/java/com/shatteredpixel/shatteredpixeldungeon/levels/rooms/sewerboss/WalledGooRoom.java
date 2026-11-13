@@ -22,6 +22,7 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.sewerboss;
 
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Goo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TibiaSewers;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.painters.Painter;
@@ -59,7 +60,7 @@ public class WalledGooRoom extends GooBossRoom {
 		
 		setupGooNest(level);
 		
-		Goo boss = new Goo();
+		Goo boss = new TibiaSewers.DeadSlime();
 		boss.pos = level.pointToCell(center());
 		level.mobs.add( boss );
 	}
