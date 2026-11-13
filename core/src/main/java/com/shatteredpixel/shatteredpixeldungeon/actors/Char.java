@@ -373,6 +373,11 @@ public abstract class Char extends Actor {
 	public boolean attack( Char enemy, float dmgMulti, float dmgBonus, float accMulti ) {
 
 		if (enemy == null) return false;
+        if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel) {
+            com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel safe =
+                (com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel)Dungeon.level;
+            if (safe.isTibiaSafeZone(pos) != safe.isTibiaSafeZone(enemy.pos)) return false;
+        }
         // Players and enemies cannot attack from/across the sewer boss antechamber.
         if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel
                 && (((com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel) Dungeon.level)
@@ -852,6 +857,14 @@ public abstract class Char extends Actor {
 	}
 	
 	public void damage( int dmg, Object src ) {
+        if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel
+                && Dungeon.hero != null) {
+            com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel safe =
+                (com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel)Dungeon.level;
+            if (this == Dungeon.hero && safe.isTibiaSafeZone(pos)) return;
+            if (this instanceof Mob && safe.isTibiaSafeZone(Dungeon.hero.pos)
+                    && !safe.isTibiaSafeZone(pos)) return;
+        }
         // True boss-floor safe zone: blocks physical, spell, trap and DOT damage,
         // in both directions. Mobs also refuse to path into the antechamber.
         if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel

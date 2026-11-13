@@ -578,6 +578,9 @@ public abstract class Mob extends Char {
 	}
 
 	private boolean cellIsPathable( int cell ){
+        if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel
+              && ((com.shatteredpixel.shatteredpixeldungeon.levels.PrisonBossLevel)Dungeon.level)
+                .isTibiaSafeZone(cell)) return false;
         if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel
                 && ((com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel)Dungeon.level).isInfernalSafeZone(cell)) {
             return false;
