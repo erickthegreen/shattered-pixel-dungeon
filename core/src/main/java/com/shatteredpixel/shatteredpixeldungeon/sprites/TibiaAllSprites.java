@@ -12,16 +12,16 @@ public final class TibiaAllSprites {
             super();
             texture(Assets.Sprites.TIBIA_ALL_V2);
             TextureFilm film = new TextureFilm(texture,32,32);
-            int i = row*8;
+            int i = row*4;
             idle = new Animation(3,true);
-            idle.frames(film,i,i+1);
+            idle.frames(film,i);
             run = new Animation(8,true);
-            run.frames(film,i+2,i+3);
+            run.frames(film,i+1);
             attack = new Animation(10,false);
-            attack.frames(film,i+4,i+5);
+            attack.frames(film,i+2);
             zap = attack.clone();
             die = new Animation(7,false);
-            die.frames(film,i+6,i+7);
+            die.frames(film,i+3);
             play(idle);
         }
     }

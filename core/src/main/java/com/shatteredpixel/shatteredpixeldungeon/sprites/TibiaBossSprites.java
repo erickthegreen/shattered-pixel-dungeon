@@ -17,12 +17,12 @@ public final class TibiaBossSprites {
             texture(Assets.Sprites.TIBIA_BOSSES_V2);
             TextureFilm f = new TextureFilm(texture,48,48);
             int i = 0;
-            idle = new Animation(5,true); idle.frames(f,i,i+1);
-            run = new Animation(8,true); run.frames(f,i+2,i+3);
-            attack = new Animation(10,false);attack.frames(f,i+4,i+5);
-            pump = new Animation(12,true);pump.frames(f,i+2,i+4);
-            pumpAttack = new Animation(15,false);pumpAttack.frames(f,i+4,i+5);
-            die = new Animation(8,false);die.frames(f,i+6,i+7);
+            idle = new Animation(5,true); idle.frames(f,i,i);
+            run = new Animation(8,true); run.frames(f,i+1,i+1);
+            attack = new Animation(10,false);attack.frames(f,i+2,i+2);
+            pump = new Animation(12,true);pump.frames(f,i+1,i+2);
+            pumpAttack = new Animation(15,false);pumpAttack.frames(f,i+2,i+2);
+            die = new Animation(8,false);die.frames(f,i+3,i+3);
             play(idle);
         }
     }
@@ -32,12 +32,12 @@ public final class TibiaBossSprites {
             super();
             texture(Assets.Sprites.TIBIA_BOSSES_V2);
             TextureFilm f = new TextureFilm(texture,48,48);
-            int i = 8;
-            idle = new Animation(4,true);idle.frames(f,i,i+1);
-            run = new Animation(12,false);run.frames(f,i+2,i+3,i);
-            attack = new Animation(11,false);attack.frames(f,i+4,i+5);
+            int i = 4;
+            idle = new Animation(4,true);idle.frames(f,i,i);
+            run = new Animation(12,false);run.frames(f,i+1,i+1,i);
+            attack = new Animation(11,false);attack.frames(f,i+2,i+2);
             zap = attack.clone();
-            die = new Animation(8,false);die.frames(f,i+6,i+7);
+            die = new Animation(8,false);die.frames(f,i+3,i+3);
             play(idle);
         }
     }
@@ -58,12 +58,12 @@ public final class TibiaBossSprites {
             if(!tibiaReady){super.updateChargeState(enraged);return;}
             texture(Assets.Sprites.TIBIA_BOSSES_V2);
             TextureFilm f = new TextureFilm(texture,48,48);
-            int i = 16;
-            idle = new Animation(enraged?12:7,true);idle.frames(f,i,i+1);
-            run = new Animation(9,true);run.frames(f,i+2,i+3);
-            attack = new Animation(12,false);attack.frames(f,i+4,i+5);
+            int i = 8;
+            idle = new Animation(enraged?12:7,true);idle.frames(f,i,i);
+            run = new Animation(9,true);run.frames(f,i+1,i+1);
+            attack = new Animation(12,false);attack.frames(f,i+2,i+2);
             zap = attack.clone();
-            die = new Animation(8,false);die.frames(f,i+6,i+7);
+            die = new Animation(8,false);die.frames(f,i+3,i+3);
             golemCharge = new Animation(4,true);golemCharge.frames(f,i+1,i+4);
             golemSlam = attack.clone();
             play(idle);
@@ -82,11 +82,11 @@ public final class TibiaBossSprites {
             super();
             texture(Assets.Sprites.TIBIA_BOSSES_V2);
             TextureFilm f = new TextureFilm(texture,48,48);
-            int i = 24;
-            idle = new Animation(5,true);idle.frames(f,i,i+1);
-            run = new Animation(10,true);run.frames(f,i+2,i+3);
-            attack = new Animation(12,false);attack.frames(f,i+4,i+5);
-            die = new Animation(8,false);die.frames(f,i+6,i+7);
+            int i = 12;
+            idle = new Animation(5,true);idle.frames(f,i,i);
+            run = new Animation(10,true);run.frames(f,i+1,i+1);
+            attack = new Animation(12,false);attack.frames(f,i+2,i+2);
+            die = new Animation(8,false);die.frames(f,i+3,i+3);
             play(idle);
         }
     }
@@ -96,12 +96,12 @@ public final class TibiaBossSprites {
             super();
             texture(Assets.Sprites.TIBIA_BOSSES_V2);
             TextureFilm f = new TextureFilm(texture,48,48);
-            int i = 32;
-            idle = new Animation(4,true);idle.frames(f,i,i+1);
-            run = new Animation(8,true);run.frames(f,i+2,i+3);
-            attack = new Animation(10,false);attack.frames(f,i+4,i+5);
+            int i = 16;
+            idle = new Animation(4,true);idle.frames(f,i,i);
+            run = new Animation(8,true);run.frames(f,i+1,i+1);
+            attack = new Animation(10,false);attack.frames(f,i+2,i+2);
             zap = attack.clone();
-            die = new Animation(8,false);die.frames(f,i+6,i+7);
+            die = new Animation(8,false);die.frames(f,i+3,i+3);
             play(idle);
         }
     }
