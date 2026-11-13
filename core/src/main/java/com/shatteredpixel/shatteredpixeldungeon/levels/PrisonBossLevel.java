@@ -34,6 +34,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.blobs.StormCloud;
 import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Doom;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Tengu;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TibiaDeeps;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Speck;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
@@ -87,6 +88,15 @@ public class PrisonBossLevel extends Level {
 	}
 	
 	private State state;
+
+    /** Safe antechamber of the Black Knight: two-tile radius around the entrance.
+     * No creature can enter or attack through it, and the player cannot shoot out.
+     */
+    public boolean isTibiaSafeZone(int cell) {
+        if (cell < 0 || cell >= length()) return false;
+        int ex=10, ey=4, x=cell%width(), y=cell/width();
+        return Math.abs(x-ex)<=1 && Math.abs(y-ey)<=1 && !solid[cell];
+    }
 	private Tengu tengu;
 
 	@Override
@@ -596,7 +606,7 @@ public class PrisonBossLevel extends Level {
 	
 	@Override
 	protected void createMobs() {
-		tengu = new Tengu(); //We want to keep track of tengu independently of other mobs, he's not always in the level.
+		tengu = new TibiaDeeps.BlackKnightBoss(); //We want to keep track of tengu independently of other mobs, he's not always in the level.
 	}
 	
 	public Actor addRespawner() {

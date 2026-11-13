@@ -32,6 +32,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.buffs.Buff;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.Hero;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.YogDzewa;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TibiaDeeps;
 import com.shatteredpixel.shatteredpixeldungeon.effects.CellEmitter;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Pushing;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.FlameParticle;
@@ -260,7 +261,7 @@ public class HallsBossLevel extends Level {
 
 		Dungeon.observe();
 
-		YogDzewa boss = new YogDzewa();
+		YogDzewa boss = new TibiaDeeps.DemonLordBoss();
 		boss.pos = exit() + width*3;
 
 		//push any char that is already here away
