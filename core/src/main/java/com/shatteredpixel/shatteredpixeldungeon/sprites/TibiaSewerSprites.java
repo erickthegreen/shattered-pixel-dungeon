@@ -4,7 +4,7 @@ package com.shatteredpixel.shatteredpixeldungeon.sprites;
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
 import com.watabou.noosa.TextureFilm;
 
-/** Native 32x32 texture cells cropped from newly authored fantasy sprites.
+/** Native 16x16 texture cells cropped from newly authored fantasy sprites.
  * 8 columns by 7 rows, normal actors take eight frames per row. */
 public final class TibiaSewerSprites {
     private TibiaSewerSprites(){}
@@ -13,7 +13,7 @@ public final class TibiaSewerSprites {
         Normal(int row){
             super();
             texture(Assets.Sprites.TIBIA_SEWERS);
-            TextureFilm frames = new TextureFilm(texture, 32, 32);
+            TextureFilm frames = new TextureFilm(texture, 16, 16);
             int i = 8*row;
             idle = new Animation(3, true);
             idle.frames(frames, i, i+1);
@@ -38,7 +38,7 @@ public final class TibiaSewerSprites {
         public DeadSlime(){
             super();
             texture(Assets.Sprites.TIBIA_SEWERS);
-            TextureFilm frames = new TextureFilm(texture, 32, 32);
+            TextureFilm frames = new TextureFilm(texture, 16, 16);
             int i = 48;
             idle = new Animation(5, true);
             idle.frames(frames, i, i+1);

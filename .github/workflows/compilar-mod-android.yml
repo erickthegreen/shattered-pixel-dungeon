@@ -7,6 +7,7 @@ on:
       - mod/edicao-infernal
       - mod/edicao-infernal-builds
       - mod/infernal-especiais-estavel
+      - mod/tibia-1-jogavel
   workflow_dispatch:
 
 permissions:
@@ -37,14 +38,14 @@ jobs:
           ./gradlew :android:assembleDebug --no-daemon --stacktrace
 
       - name: Habilitar aceleracao KVM para emulador Android
-        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel'
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel'
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
           sudo udevadm control --reload-rules
           sudo udevadm trigger --name-match=kvm
 
       - name: Testar APK de verdade num emulador Android
-        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel'
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
@@ -56,7 +57,7 @@ jobs:
           script: bash .github/scripts/verificar-infernal-android.sh
 
       - name: Testar a edicao no Android 16 (API 36)
-        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel'
+        if: github.ref == 'refs/heads/mod/infernal-especiais-estavel' || github.ref == 'refs/heads/mod/tibia-1-jogavel'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 36
@@ -89,6 +90,22 @@ jobs:
             gh release create "$TAG" "$APK" --repo "$GITHUB_REPOSITORY" \
               --target "$GITHUB_SHA" --title "Infernal - Somente Especiais (corrigida)" \
               --notes "$NOTES" --latest
+          fi
+
+      - name: Publicar Tibia 1.0 apos testes Android 11 e 16
+        if: github.ref == 'refs/heads/mod/tibia-1-jogavel'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="tibia-1-andares-1-5"
+          APK="android/build/outputs/apk/debug/android-debug.apk"
+          NOTES="Tibia x Shattered: Rat, Rotworm, Carrion Worm, Troll, Minotaur, Slime, chefe Dead Slime e zona segura, XP, oito amuletos +1000 e 100 pocoes de experiencia. Dificuldade 15x HP, 6x dano e 5x defesa/precisao/esquiva. Testado em emuladores Android 11 e 16."
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$APK" --clobber --repo "$GITHUB_REPOSITORY"
+            gh release edit "$TAG" --latest --title "Tibia x Shattered 1.0 - Andares 1-5" --notes "$NOTES" --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" "$APK" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+              --title "Tibia x Shattered 1.0 - Andares 1-5" --notes "$NOTES" --latest
           fi
 
       - name: Publicar APK direto na pagina Releases
