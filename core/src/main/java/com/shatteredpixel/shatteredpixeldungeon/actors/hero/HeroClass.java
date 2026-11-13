@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
@@ -124,6 +125,7 @@ public enum HeroClass {
 		// Mod pessoal: equipamentos especiais a cada partida nova.
 		new ScrollOfUpgrade().quantity(1000).identify().collect();
 		new ScrollOfTransmutation().quantity(1000).identify().collect();
+        new PotionOfExperience().quantity(100).identify().collect();
 		new StoneOfAugmentation().quantity(1000).identify().collect();
 		new StoneOfEnchantment().quantity(1000).identify().collect();
 		// Nivel +1000, mesmo que o limite de criacao normal do dente seja +3.

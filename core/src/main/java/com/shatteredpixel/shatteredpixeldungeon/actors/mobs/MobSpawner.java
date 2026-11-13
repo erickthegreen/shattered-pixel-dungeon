@@ -69,13 +69,23 @@ public class MobSpawner extends Actor {
 	public static ArrayList<Class<? extends Mob>> getMobRotation(int depth ){
 		ArrayList<Class<? extends Mob>> mobs = new ArrayList<>();
 		if (depth <= 1){
-			mobs.addAll(Arrays.asList(Albino.class, Albino.class, Albino.class));
-		} else if (depth <= 2){
-			mobs.addAll(Arrays.asList(Albino.class, Albino.class, GnollExile.class));
-		} else if (depth <= 3){
-			mobs.addAll(Arrays.asList(Albino.class, GnollExile.class, HermitCrab.class));
-		} else if (depth <= 5){
-			mobs.addAll(Arrays.asList(GnollExile.class, HermitCrab.class, CausticSlime.class));
+            mobs.addAll(Arrays.asList(TibiaSewers.Rat.class, TibiaSewers.Rat.class,
+                    TibiaSewers.Rat.class, TibiaSewers.Rotworm.class,
+                    TibiaSewers.Rotworm.class, TibiaSewers.CarrionWorm.class));
+        } else if (depth <= 2){
+            mobs.addAll(Arrays.asList(TibiaSewers.Rat.class, TibiaSewers.Rat.class,
+                    TibiaSewers.Rotworm.class, TibiaSewers.Rotworm.class,
+                    TibiaSewers.CarrionWorm.class, TibiaSewers.Troll.class));
+        } else if (depth <= 3){
+            mobs.addAll(Arrays.asList(TibiaSewers.Rat.class, TibiaSewers.Rotworm.class,
+                    TibiaSewers.CarrionWorm.class, TibiaSewers.CarrionWorm.class,
+                    TibiaSewers.Troll.class, TibiaSewers.Minotaur.class,
+                    TibiaSewers.Minotaur.class));
+        } else if (depth <= 5){
+            mobs.addAll(Arrays.asList(TibiaSewers.Rat.class, TibiaSewers.Rotworm.class,
+                    TibiaSewers.CarrionWorm.class, TibiaSewers.CarrionWorm.class,
+                    TibiaSewers.Troll.class, TibiaSewers.Minotaur.class,
+                    TibiaSewers.Minotaur.class, TibiaSewers.Slime.class));
 		} else if (depth <= 10){
 			// Prison elites: disabling ordinary skeletons, thieves, guards, DM-100.
 			mobs.addAll(Arrays.asList(Bandit.class, Bandit.class, SpectralNecromancer.class));
@@ -98,7 +108,9 @@ public class MobSpawner extends Actor {
 
 	/** Is this an enemy which can legitimately appear in the new rare-only rotation? */
 	public static boolean isInfernalSpecial(Mob m) {
-		return m instanceof Albino
+		return m instanceof TibiaSewers.Creature
+                || m instanceof TibiaSewers.DeadSlime
+                || m instanceof Albino
 				|| m instanceof GnollExile
 				|| m instanceof HermitCrab
 				|| m instanceof CausticSlime

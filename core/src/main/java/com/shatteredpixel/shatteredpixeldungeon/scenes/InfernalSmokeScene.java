@@ -13,6 +13,7 @@ import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.hero.HeroClass;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.MobSpawner;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TibiaSewers;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
 
@@ -26,7 +27,7 @@ public class InfernalSmokeScene extends PixelScene {
     public void create() {
         super.create();
         try {
-            int[] checkDepths = {1, 2, 3, 4, 6, 8, 9, 11, 12, 14, 16, 18, 19, 21, 22, 24};
+            int[] checkDepths = {1, 2, 3, 4, 5, 6, 8, 9, 11, 12, 14, 16, 18, 19, 21, 22, 24};
 
             for (HeroClass heroClass : HeroClass.values()) {
                 Dungeon.seed = 87897L + heroClass.ordinal();
@@ -35,8 +36,8 @@ public class InfernalSmokeScene extends PixelScene {
                 Dungeon.init();
 
                 ArrayList<Trinket> trinkets = Dungeon.hero.belongings.getAllItems(Trinket.class);
-                if (trinkets.size() != 17) {
-                    throw new AssertionError(heroClass + ": expected 17 trinkets, got " + trinkets.size());
+                if (trinkets.size() != 8) {
+                    throw new AssertionError(heroClass + ": expected 8 trinkets, got " + trinkets.size());
                 }
                 for (Trinket trinket : trinkets) {
                     if (trinket.level() != 1000 || trinket.buffedLvl() > 3) {
@@ -59,7 +60,7 @@ public class InfernalSmokeScene extends PixelScene {
                 // starter loadout, all trinkets, and special-only population.
                 Level firstFloor = Dungeon.newLevel();
                 validateFloor(firstFloor, 1);
-                Gdx.app.log(TAG, "PASS_CLASS " + heroClass + " trinkets=17 rings=" + rings + " enemies=" + firstFloor.mobs.size());
+                Gdx.app.log(TAG, "PASS_CLASS " + heroClass + " trinkets=8 rings=" + rings + " enemies=" + firstFloor.mobs.size());
             }
 
             // Spawn tables and representative level generation from all regions.
@@ -77,6 +78,17 @@ public class InfernalSmokeScene extends PixelScene {
                 }
                 Level level = Dungeon.newLevel();
                 validateFloor(level, depth);
+                if (depth == 5) {
+                    boolean boss = false;
+                    for (Mob m : level.mobs) {
+                        if (m instanceof TibiaSewers.DeadSlime) boss = true;
+                    }
+                    if (!boss) throw new AssertionError("Missing Dead Slime boss on floor 5");
+                    if (!((com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel)level)
+                            .isInfernalSafeZone(level.entrance())) {
+                        throw new AssertionError("Safe zone missing from floor 5");
+                    }
+                }
                 Gdx.app.log(TAG, "PASS_FLOOR depth=" + depth + " mobs=" + level.mobs.size());
             }
 

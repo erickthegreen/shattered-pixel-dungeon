@@ -373,6 +373,12 @@ public abstract class Char extends Actor {
 	public boolean attack( Char enemy, float dmgMulti, float dmgBonus, float accMulti ) {
 
 		if (enemy == null) return false;
+        // Players and enemies cannot attack from/across the sewer boss antechamber.
+        if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel
+                && (((com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel) Dungeon.level)
+                    .isInfernalSafeZone(pos)
+                    != ((com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel) Dungeon.level)
+                    .isInfernalSafeZone(enemy.pos))) return false;
 		
 		boolean visibleFight = Dungeon.level.heroFOV[pos] || Dungeon.level.heroFOV[enemy.pos];
 
@@ -390,7 +396,7 @@ public abstract class Char extends Actor {
 			
 			int dr = Math.round(enemy.drRoll() * AscensionChallenge.statModifier(enemy));
 			if (enemy instanceof Mob && enemy.alignment == Alignment.ENEMY) {
-				dr = (int)Math.min(1_500_000_000L, Math.max(0L, dr * 8L));
+				dr = (int)Math.min(1_500_000_000L, Math.max(0L, dr * 5L));
 			}
 			
 			if (this instanceof Hero){
@@ -422,7 +428,7 @@ public abstract class Char extends Actor {
 			dmg = dmg*dmgMulti;
 			// Scale every ordinary monster melee attack, without overflowing int.
 			if (this instanceof Mob && alignment == Alignment.ENEMY) {
-				dmg = Math.min(1_500_000_000f, dmg * 9f);
+				dmg = Math.min(1_500_000_000f, dmg * 6f);
 			}
 
 			//flat damage bonus is affected by multipliers
@@ -627,7 +633,7 @@ public abstract class Char extends Actor {
 	public static boolean hit( Char attacker, Char defender, float accMulti, boolean magic ) {
 		float acuStat = attacker.attackSkill( defender );
 		if (attacker instanceof Mob && attacker.alignment == Alignment.ENEMY) {
-			acuStat = Math.min(1_500_000_000f, acuStat * 8f);
+			acuStat = Math.min(1_500_000_000f, acuStat * 5f);
 		}
 		float defStat = defender.defenseSkill( attacker );
 

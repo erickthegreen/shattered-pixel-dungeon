@@ -39,8 +39,8 @@ import java.util.ArrayList;
 
 public class GooSprite extends MobSprite {
 	
-	private Animation pump;
-	private Animation pumpAttack;
+	protected Animation pump;
+	protected Animation pumpAttack;
 
 	private Emitter spray;
 

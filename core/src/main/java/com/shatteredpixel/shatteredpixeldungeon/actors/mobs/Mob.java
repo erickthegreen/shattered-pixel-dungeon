@@ -149,9 +149,9 @@ public abstract class Mob extends Char {
 			// onAdd is called once; restored monsters retain their saved values.
 			float modifier = AscensionChallenge.statModifier(this);
 			if (alignment == Alignment.ENEMY) {
-				HT = (int)Math.max(1, Math.min(1_500_000_000d, HT * (double)modifier * 30d));
+				HT = (int)Math.max(1, Math.min(1_500_000_000d, HT * (double)modifier * 15d));
 				HP = Math.max(1, Math.min(HT, Math.round(HT * percent)));
-				defenseSkill = (int)Math.min(1_500_000_000L, Math.max(0L, defenseSkill * 8L));
+				defenseSkill = (int)Math.min(1_500_000_000L, Math.max(0L, defenseSkill * 5L));
 			} else {
 				HT = Math.max(1, Math.round(HT * modifier));
 				HP = Math.max(1, Math.min(HT, Math.round(HT * percent)));
@@ -578,6 +578,10 @@ public abstract class Mob extends Char {
 	}
 
 	private boolean cellIsPathable( int cell ){
+        if (Dungeon.level instanceof com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel
+                && ((com.shatteredpixel.shatteredpixeldungeon.levels.SewerBossLevel)Dungeon.level).isInfernalSafeZone(cell)) {
+            return false;
+        }
 		if (!Dungeon.level.passable[cell]){
 			if (flying || buff(Amok.class) != null){
 				if (!Dungeon.level.avoid[cell]){

@@ -578,25 +578,16 @@ public class Generator {
 			//Trinkets are unique like artifacts, but unlike them you can only have one at once
 			//So we don't need the same enforcement of uniqueness
 			TRINKET.classes = new Class<?>[]{
-					RatSkull.class,
-					ParchmentScrap.class,
-					PetrifiedSeed.class,
-					ExoticCrystals.class,
-					MossyClump.class,
-					DimensionalSundial.class,
-					ThirteenLeafClover.class,
-					TrapMechanism.class,
-					MimicTooth.class,
-					WondrousResin.class,
-					EyeOfNewt.class,
-					SaltCube.class,
-					VialOfBlood.class,
-					ShardOfOblivion.class,
-					ChaoticCenser.class,
-					FerretTuft.class,
-					CrackedSpyglass.class
-			};
-			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+                    ParchmentScrap.class,
+                    PetrifiedSeed.class,
+                    ExoticCrystals.class,
+                    MossyClump.class,
+                    MimicTooth.class,
+                    WondrousResin.class,
+                    ChaoticCenser.class,
+                    CrackedSpyglass.class
+            };
+			TRINKET.defaultProbs = new float[]{ 1, 1, 1, 1, 1, 1, 1, 1 };
 			TRINKET.probs = TRINKET.defaultProbs.clone();
 
 			for (Category cat : Category.values()){

@@ -317,6 +317,7 @@ public class Assets {
 		public static final String BEE      = "sprites/bee.png";
 		public static final String MIMIC    = "sprites/mimic.png";
 		public static final String ABYSSAL_DEVOURER = "sprites/abyssal_devourer.png";
+        public static final String TIBIA_SEWERS = "sprites/tibia_sewers.png";
 		public static final String ROT_LASH = "sprites/rot_lasher.png";
 		public static final String ROT_HEART= "sprites/rot_heart.png";
 		public static final String GUARD    = "sprites/guard.png";

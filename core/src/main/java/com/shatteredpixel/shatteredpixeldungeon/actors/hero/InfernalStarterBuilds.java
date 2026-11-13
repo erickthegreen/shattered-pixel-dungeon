@@ -90,7 +90,7 @@ public final class InfernalStarterBuilds {
             Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
         }
 
-        // Existing Mimic Tooth is moved into this bag; all other trinkets join it.
+        // Only the eight approved +1000 trinkets are put in this bag.
         new InfernalTrinketPouch().collect();
         for (Class<?> trinketClass : Generator.Category.TRINKET.classes) {
             @SuppressWarnings("unchecked")

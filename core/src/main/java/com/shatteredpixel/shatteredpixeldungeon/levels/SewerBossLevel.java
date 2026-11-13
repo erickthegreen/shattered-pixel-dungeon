@@ -27,6 +27,7 @@ import com.shatteredpixel.shatteredpixeldungeon.Statistics;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Actor;
 import com.shatteredpixel.shatteredpixeldungeon.actors.Char;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Goo;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.TibiaSewers;
 import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Mob;
 import com.shatteredpixel.shatteredpixeldungeon.items.Heap;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
@@ -130,8 +131,44 @@ public class SewerBossLevel extends SewerLevel {
 	}
 
 	@Override
-	protected void createMobs() {
-	}
+    protected void createMobs() {
+        // The boss itself is placed by the GooBossRoom painters.
+        // Keep escorts away from the protected entrance and the stairs.
+        @SuppressWarnings("unchecked")
+        Class<? extends Mob>[] types = new Class[]{
+                TibiaSewers.Rotworm.class,
+                TibiaSewers.CarrionWorm.class,
+                TibiaSewers.Minotaur.class
+        };
+        for (Class<? extends Mob> cls : types) {
+            Mob enemy = com.watabou.utils.Reflection.newInstance(cls);
+            int cell = -1;
+            for (int tries=0; tries<100; tries++){
+                int test = Random.Int(length());
+                if (passable[test] && !solid[test] && findMob(test) == null
+                        && test != exit() && !isInfernalSafeZone(test)
+                        && distance(test, entrance()) > 7) {
+                    cell = test;
+                    break;
+                }
+            }
+            if (cell >= 0){
+                enemy.pos = cell;
+                mobs.add(enemy);
+            }
+        }
+    }
+
+    /** A small antechamber around the arrival stair: enemies cannot enter it,
+     * and normal melee attacks cannot cross its boundary in either direction. */
+    public boolean isInfernalSafeZone(int cell) {
+        int e = entrance();
+        if (cell < 0 || cell >= length() || e < 0 || e >= length()) return false;
+        int x = cell % width(), y = cell / width();
+        int ex = e % width(), ey = e / width();
+        return Math.abs(x-ex) <= 1 && Math.abs(y-ey) <= 1
+                && map[cell] != Terrain.WALL;
+    }
 	
 	public Actor addRespawner() {
 		return null;
