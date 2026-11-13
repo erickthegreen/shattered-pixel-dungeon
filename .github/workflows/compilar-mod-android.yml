@@ -67,7 +67,7 @@ jobs:
           profile: pixel_2
           emulator-boot-timeout: 600
           emulator-options: -no-window -no-snapshot -noaudio -no-boot-anim -gpu swiftshader_indirect
-          script: bash .github/scripts/verificar-infernal-android.sh
+          script: INFERNAL_SMOKE_FAST=true bash .github/scripts/verificar-infernal-android.sh
 
       - name: Publish APK
         uses: actions/upload-artifact@v4

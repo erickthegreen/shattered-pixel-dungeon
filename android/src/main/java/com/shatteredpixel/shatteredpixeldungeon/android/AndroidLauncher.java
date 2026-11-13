@@ -172,6 +172,8 @@ public class AndroidLauncher extends AndroidApplication {
 		boolean isDebuggable = (getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
 		ShatteredPixelDungeon.infernalSmoke = isDebuggable && getIntent() != null
 				&& getIntent().getBooleanExtra("infernal_smoke", false);
+		ShatteredPixelDungeon.infernalSmokeFast = isDebuggable && getIntent() != null
+                && getIntent().getBooleanExtra("infernal_smoke_fast", false);
 		ShatteredPixelDungeon.infernalSmokeDepth = getIntent() != null
 				? getIntent().getIntExtra("infernal_smoke_depth", 1) : 1;
 		initialize(new ShatteredPixelDungeon(support), config);

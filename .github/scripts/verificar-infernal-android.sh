@@ -44,10 +44,10 @@ check_depth () {
   adb shell am force-stop "$APP" || true
   adb logcat -c
   adb shell am start -W -n "$APP/$ACTIVITY" \
-    --ez infernal_smoke true --ei infernal_smoke_depth "$depth"
+    --ez infernal_smoke true --ez infernal_smoke_fast "${INFERNAL_SMOKE_FAST:-false}" --ei infernal_smoke_depth "$depth"
 
   local ready=0
-  for i in $(seq 1 90); do
+  for i in $(seq 1 150); do
     capture_logs
     if grep -q 'INFERNAL_SMOKE.*FAIL' /tmp/infernal-log.txt; then
       grep -E 'INFERNAL_SMOKE|FATAL EXCEPTION|java.lang.' /tmp/infernal-log.txt | tail -n 100 || true

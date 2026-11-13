@@ -28,7 +28,11 @@ public class InfernalSmokeScene extends PixelScene {
     public void create() {
         super.create();
         try {
-            int[] checkDepths = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
+            // Android 11 covers every depth. Android 16 repeats representative
+            // stages only to avoid CI emulator timeout on slow cold boots.
+            int[] checkDepths = ShatteredPixelDungeon.infernalSmokeFast
+                    ? new int[]{1,5,6,8,10,12,15,20,21,24,25}
+                    : new int[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25};
 
             for (HeroClass heroClass : HeroClass.values()) {
                 Dungeon.seed = 87897L + heroClass.ordinal();

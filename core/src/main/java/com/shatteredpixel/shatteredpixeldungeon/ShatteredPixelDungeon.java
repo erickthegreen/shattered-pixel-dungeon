@@ -36,6 +36,7 @@ public class ShatteredPixelDungeon extends Game {
 
 	// Activated solely from a debuggable Android build via explicit ADB intent.
 	public static boolean infernalSmoke = false;
+	public static boolean infernalSmokeFast = false;
 	public static int infernalSmokeDepth = 1;
 
 	//rankings from v1.2.3 and older use a different score formula, so this reference is kept
