@@ -2,7 +2,7 @@ package com.shatteredpixel.shatteredpixeldungeon.actors.hero;
 
 import com.shatteredpixel.shatteredpixeldungeon.Dungeon;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
-import com.shatteredpixel.shatteredpixeldungeon.items.armor.PlateArmor;
+import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.InfernalTrinketPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfAccuracy;
@@ -15,94 +15,81 @@ import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfMight;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfSharpshooting;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfTenacity;
 import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.Trinket;
-import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfDisintegration;
-import com.shatteredpixel.shatteredpixeldungeon.items.KindOfWeapon;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.AssassinsBlade;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Greatshield;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.MagesStaff;
-import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.RunicBlade;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Dirk;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.HandAxe;
+import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Rapier;
 import com.watabou.utils.Reflection;
 
 /**
- * Infernal starting loadouts, selected by hero class (not by subclass, which
- * is unlocked later). +1000 is the stored trinket level, but trinket effects
- * are capped by Trinket.buffedLvl() to avoid invalid math and endless loops.
+ * Balanced Tibia edition: two modest rings, class weapon +2, armor +2.
+ * The former tier-5 +100 weapons and five +15 rings removed all challenge.
+ * Every adventurer still retains their original class-specific equipment.
  */
 public final class InfernalStarterBuilds {
     private InfernalStarterBuilds() {}
-
-    private static final int WEAPON_LEVEL = 100;
-    private static final int TRINKET_LEVEL = 1000;
+    private static final int WEAPON_LEVEL = 2;
+    private static final int TRINKET_LEVEL = 2;
 
     public static void prepare(Hero hero) {
-        // Keep the existing plate armor and class artifacts. Replace the starter weapon only.
         switch (hero.heroClass) {
             case WARRIOR:
-                equipWeapon(hero, new RunicBlade());
-                break;
-            case MAGE:
-                // Preserve the existing Mage staff's charging mechanics.
-                MagesStaff staff = (MagesStaff) hero.belongings.weapon;
-                staff.imbueWand(new WandOfDisintegration(), hero);
-                staff.level(WEAPON_LEVEL);
-                staff.updateWand(false);
-                staff.identify();
+                equipWeapon(hero, new HandAxe());
                 break;
             case ROGUE:
-                equipWeapon(hero, new AssassinsBlade());
+                equipWeapon(hero, new Dirk());
+                break;
+            case DUELIST:
+                equipWeapon(hero, new Rapier());
                 break;
             case HUNTRESS:
-                // The Spirit Bow's infernal upgrade is handled separately.
-                equipWeapon(hero, new Greatshield());
+                // Keep starting melee equipment and original ranged bow mechanics.
+                if (hero.belongings.weapon != null) {
+                    hero.belongings.weapon.level(1);
+                    hero.belongings.weapon.identify();
+                }
                 for (SpiritBow bow : hero.belongings.getAllItems(SpiritBow.class)) {
-                    bow.level(WEAPON_LEVEL);
+                    bow.level(1);
                     bow.identify();
                 }
                 break;
-            case DUELIST:
-                equipWeapon(hero, new RunicBlade());
-                // A second upgraded weapon is provided for the Champion path.
-                new Greatshield().level(WEAPON_LEVEL).identify().collect();
-                break;
+            case MAGE:
             case CLERIC:
-                equipWeapon(hero, new Greatshield());
-                break;
             default:
+                // Never replace the Mage's special charging staff or Cleric's relic.
+                if (hero.belongings.weapon != null) {
+                    hero.belongings.weapon.level(WEAPON_LEVEL);
+                    hero.belongings.weapon.identify();
+                }
                 break;
         }
 
-        // Auto-equip the three most useful rings for this class.
+        int equipped = 0;
         for (Class<?> ringClass : Generator.Category.RING.classes) {
             int upgrades = ringUpgrade(hero.heroClass, ringClass);
-            if (upgrades > 0) {
-                Ring ring = (Ring) Reflection.newInstance(ringClass);
-                ring.level(upgrades);
-                ring.identify();
-                hero.belongings.putInFreeRingSlot(ring);
-                ring.activate(hero);
-            }
+            if (upgrades <= 0 || equipped >= 2) continue;
+            Ring ring = (Ring) Reflection.newInstance(ringClass);
+            ring.level(upgrades);
+            ring.identify();
+            hero.belongings.putInFreeRingSlot(ring);
+            ring.activate(hero);
+            equipped++;
         }
-
-        // Apply the starting Ring of Might's hit-point benefit immediately.
         hero.updateHT(true);
-        if (hero.heroClass == HeroClass.DUELIST) {
-            Dungeon.quickslot.setSlot(0, hero.belongings.weapon);
-        }
 
-        // Only the eight approved +1000 trinkets are put in this bag.
+        // Eight curated, small-effect trinkets; no permanent 1000-level buffs.
         new InfernalTrinketPouch().collect();
-        for (Class<?> trinketClass : Generator.Category.TRINKET.classes) {
+        for (Class<?> c : Generator.Category.TRINKET.classes) {
             @SuppressWarnings("unchecked")
-            Class<? extends Trinket> itemClass = (Class<? extends Trinket>) trinketClass;
-            Trinket existing = hero.belongings.getItem(itemClass);
-            if (existing != null) {
-                existing.level(TRINKET_LEVEL);
+            Class<? extends Trinket> type = (Class<? extends Trinket>)c;
+            Trinket t = hero.belongings.getItem(type);
+            if (t == null) {
+                t = (Trinket)Reflection.newInstance(type);
+                t.level(TRINKET_LEVEL);
+                t.identify();
+                t.collect();
             } else {
-                Trinket trinket = (Trinket) Reflection.newInstance(trinketClass);
-                trinket.level(TRINKET_LEVEL);
-                trinket.identify();
-                trinket.collect();
+                t.level(TRINKET_LEVEL);
             }
         }
     }
@@ -114,46 +101,22 @@ public final class InfernalStarterBuilds {
         weapon.activate(hero);
     }
 
-    /** Only preferred rings are upgraded; all other types stay at their normal level. */
-    public static int ringUpgrade(HeroClass cls, Class<?> ringClass) {
+    public static int ringUpgrade(HeroClass cls, Class<?> c) {
         if (cls == null) return 0;
-        // Universal safety/mobility bonuses, on top of the class-specific build.
-        if (ringClass == RingOfHaste.class) return 15;
-        if (ringClass == RingOfMight.class) return 12;
         switch (cls) {
             case WARRIOR:
-                if (ringClass == RingOfFuror.class) return 16;
-                if (ringClass == RingOfAccuracy.class) return 20;
-                if (ringClass == RingOfArcana.class) return 12;
-                break;
+                return c == RingOfMight.class || c == RingOfTenacity.class ? 1 : 0;
             case MAGE:
-                if (ringClass == RingOfEnergy.class) return 16;
-                if (ringClass == RingOfArcana.class) return 12;
-                if (ringClass == RingOfTenacity.class) return 15;
-                break;
+                return c == RingOfEnergy.class || c == RingOfArcana.class ? 1 : 0;
             case ROGUE:
-                if (ringClass == RingOfAccuracy.class) return 20;
-                if (ringClass == RingOfFuror.class) return 16;
-                if (ringClass == RingOfEvasion.class) return 15;
-                break;
+                return c == RingOfEvasion.class || c == RingOfHaste.class ? 1 : 0;
             case HUNTRESS:
-                if (ringClass == RingOfSharpshooting.class) return 25;
-                if (ringClass == RingOfFuror.class) return 16;
-                if (ringClass == RingOfAccuracy.class) return 20;
-                break;
+                return c == RingOfSharpshooting.class || c == RingOfHaste.class ? 1 : 0;
             case DUELIST:
-                if (ringClass == RingOfArcana.class) return 12;
-                if (ringClass == RingOfFuror.class) return 16;
-                if (ringClass == RingOfAccuracy.class) return 20;
-                break;
+                return c == RingOfAccuracy.class || c == RingOfFuror.class ? 1 : 0;
             case CLERIC:
-                if (ringClass == RingOfEnergy.class) return 16;
-                if (ringClass == RingOfTenacity.class) return 15;
-                if (ringClass == RingOfArcana.class) return 12;
-                break;
-            default:
-                break;
+                return c == RingOfEnergy.class || c == RingOfTenacity.class ? 1 : 0;
+            default: return 0;
         }
-        return 0;
     }
 }
