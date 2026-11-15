@@ -131,6 +131,7 @@ public class SewerBossLevel extends SewerLevel {
 
 	@Override
 	protected void createMobs() {
+		createBossFloorMobs();
 	}
 	
 	public Actor addRespawner() {

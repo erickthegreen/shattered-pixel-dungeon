@@ -428,6 +428,7 @@ public class Toolbar extends Component {
 								if (b.ring() != null) items.add(0, b.ring());
 								if (b.misc() != null) items.add(0, b.misc());
 								if (b.artifact() != null) items.add(0, b.artifact());
+								if (b.extraArtifact() != null) items.add(0, b.extraArtifact());
 								if (b.armor() != null) items.add(0, b.armor());
 								if (b.secondWep() != null) items.add(0, b.secondWep());
 								if (b.weapon() != null) items.add(0, b.weapon());

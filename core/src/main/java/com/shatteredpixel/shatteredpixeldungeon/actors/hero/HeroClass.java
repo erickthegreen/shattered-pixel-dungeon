@@ -55,6 +55,7 @@ import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.HolyTome;
 import com.shatteredpixel.shatteredpixeldungeon.items.bags.VelvetPouch;
 import com.shatteredpixel.shatteredpixeldungeon.items.food.Food;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfExperience;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfInvisibility;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfLiquidFlame;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfMindVision;
@@ -69,7 +70,6 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurs
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAugmentation;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
-import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
@@ -119,12 +119,11 @@ public enum HeroClass {
 
 		new ScrollOfIdentify().identify();
 
-		// Mod pessoal: equipamentos especiais a cada partida nova.
-		new ScrollOfUpgrade().quantity(1000).identify().collect();
+		// Recursos de início, para investir nos equipamentos que o jogador escolher.
+		new ScrollOfUpgrade().quantity(10).identify().collect();
+		new PotionOfExperience().quantity(100).identify().collect();
 		new StoneOfAugmentation().identify().collect();
 		new StoneOfEnchantment().identify().collect();
-		// Nivel +1000, mesmo que o limite de criacao normal do dente seja +3.
-		new MimicTooth().level(1000).identify().collect();
 
 		switch (this) {
 			case WARRIOR:
@@ -151,6 +150,7 @@ public enum HeroClass {
 				initCleric( hero );
 				break;
 		}
+		ClassStarterRings.equip(hero);
 
 		if (SPDSettings.quickslotWaterskin()) {
 			for (int s = 0; s < QuickSlot.SIZE; s++) {

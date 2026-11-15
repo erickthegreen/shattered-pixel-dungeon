@@ -555,6 +555,31 @@ public abstract class Level implements Bundlable {
 
 	abstract protected void createMobs();
 
+	/** Regular enemies on boss floors, at four times the usual floor population. */
+	protected void createBossFloorMobs() {
+		int count = 4 * (3 + Dungeon.depth % 5 + Random.Int(3));
+		ArrayList<Integer> cells = new ArrayList<>();
+		for (int cell = 0; cell < length(); cell++) {
+			if (passable[cell] && !solid[cell]
+					&& distance(cell, entrance()) > 3
+					&& distance(cell, exit()) > 3
+					&& traps.get(cell) == null && plants.get(cell) == null
+					&& findMob(cell) == null) {
+				cells.add(cell);
+			}
+		}
+		Random.shuffle(cells);
+		for (int cell : cells) {
+			if (count == 0) break;
+			Mob mob = createMob();
+			if (mob == null) break;
+			if (mob.properties().contains(Char.Property.LARGE) && !openSpace[cell]) continue;
+			mob.pos = cell;
+			mobs.add(mob);
+			count--;
+		}
+	}
+
 	abstract protected void createItems();
 
 	public int entrance(){

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - mod/aneis-e-pergaminhos
+      - mod/shattered-itens-mimicos-quatro-vezes-monstros
   workflow_dispatch:
 
 permissions:

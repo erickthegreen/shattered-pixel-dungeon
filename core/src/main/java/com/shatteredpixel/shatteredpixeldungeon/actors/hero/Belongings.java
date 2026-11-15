@@ -82,6 +82,7 @@ public class Belongings implements Iterable<Item> {
 	public KindOfWeapon weapon = null;
 	public Armor armor = null;
 	public Artifact artifact = null;
+	public Artifact extraArtifact = null;
 	public KindofMisc misc = null;
 	public Ring ring = null;
 	public Ring extraRing = null;
@@ -137,6 +138,14 @@ public class Belongings implements Iterable<Item> {
 	public Artifact artifact(){
 		if (!lostInventory() || (artifact != null && artifact.keptThroughLostInventory())){
 			return artifact;
+		} else {
+			return null;
+		}
+	}
+
+	public Artifact extraArtifact(){
+		if (!lostInventory() || (extraArtifact != null && extraArtifact.keptThroughLostInventory())){
+			return extraArtifact;
 		} else {
 			return null;
 		}
@@ -206,6 +215,7 @@ public class Belongings implements Iterable<Item> {
 	private static final String WEAPON		= "weapon";
 	private static final String ARMOR		= "armor";
 	private static final String ARTIFACT   = "artifact";
+	private static final String EXTRA_ARTIFACT = "extra_artifact";
 	private static final String MISC       = "misc";
 	private static final String RING       = "ring";
 	private static final String EXTRA_RING = "extra_ring";
@@ -220,6 +230,7 @@ public class Belongings implements Iterable<Item> {
 		bundle.put( WEAPON, weapon );
 		bundle.put( ARMOR, armor );
 		bundle.put( ARTIFACT, artifact );
+		bundle.put( EXTRA_ARTIFACT, extraArtifact );
 		bundle.put( MISC, misc );
 		bundle.put( RING, ring );
 		bundle.put( EXTRA_RING, extraRing );
@@ -242,6 +253,8 @@ public class Belongings implements Iterable<Item> {
 
 		artifact = (Artifact) bundle.get(ARTIFACT);
 		if (artifact() != null)     artifact().activate(owner);
+		extraArtifact = (Artifact) bundle.get(EXTRA_ARTIFACT);
+		if (extraArtifact() != null) extraArtifact().activate(owner);
 
 		misc = (KindofMisc) bundle.get(MISC);
 		if (misc() != null)         misc().activate( owner );
@@ -267,6 +280,7 @@ public class Belongings implements Iterable<Item> {
 		weapon = secondWep = null;
 		armor = null;
 		artifact = null;
+		extraArtifact = null;
 		misc = null;
 		ring = null;
 		extraRing = null;
@@ -416,6 +430,10 @@ public class Belongings implements Iterable<Item> {
 			artifact().identify();
 			Badges.validateItemLevelAquired(artifact());
 		}
+		if (extraArtifact() != null) {
+			extraArtifact().identify();
+			Badges.validateItemLevelAquired(extraArtifact());
+		}
 		if (misc() != null) {
 			if (ShardOfOblivion.passiveIDDisabled() && misc() instanceof Ring){
 				((Ring) misc()).setIDReady();
@@ -467,6 +485,7 @@ public class Belongings implements Iterable<Item> {
 		worn.add(armor());
 		worn.add(weapon());
 		worn.add(artifact());
+		worn.add(extraArtifact());
 		worn.add(misc());
 		worn.add(ring());
 		worn.add(extraRing());
@@ -507,7 +526,7 @@ public class Belongings implements Iterable<Item> {
 		private Item[] equipped = makeEquippedSnapshot();
 
 		private Item[] makeEquippedSnapshot() {
-			Item[] all = new Item[7 + ringSlots.length];
+			Item[] all = new Item[8 + ringSlots.length];
 			all[0] = weapon;
 			all[1] = armor;
 			all[2] = artifact;
@@ -515,7 +534,8 @@ public class Belongings implements Iterable<Item> {
 			all[4] = ring;
 			all[5] = secondWep;
 			all[6] = extraRing;
-			for (int i = 0; i < ringSlots.length; i++) all[i+7] = ringSlots[i];
+			all[7] = extraArtifact;
+			for (int i = 0; i < ringSlots.length; i++) all[i+8] = ringSlots[i];
 			return all;
 		}
 		private int backpackIndex = equipped.length;
@@ -569,9 +589,12 @@ public class Belongings implements Iterable<Item> {
 			case 6:
 				equipped[6] = extraRing = null;
 				break;
+			case 7:
+				equipped[7] = extraArtifact = null;
+				break;
 			default:
-				if (index >= 7 && index < 7 + ringSlots.length) {
-					equipped[index] = ringSlots[index - 7] = null;
+				if (index >= 8 && index < 8 + ringSlots.length) {
+					equipped[index] = ringSlots[index - 8] = null;
 				} else {
 					backpackIterator.remove();
 				}

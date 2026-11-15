@@ -152,7 +152,7 @@ public class MiningLevel extends CavesLevel {
 	@Override
 	public int mobLimit() {
 		//1 fewer than usual
-		return super.mobLimit()-1;
+		return super.mobLimit()-4;
 	}
 
 	@Override

@@ -211,6 +211,7 @@ public class CavesBossLevel extends Level {
 			pylon.pos = i;
 			mobs.add(pylon);
 		}
+		createBossFloorMobs();
 	}
 
 	@Override

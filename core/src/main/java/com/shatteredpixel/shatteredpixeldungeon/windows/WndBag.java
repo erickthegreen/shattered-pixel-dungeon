@@ -105,9 +105,8 @@ public class WndBag extends WndTabbed {
 		slotHeight = PixelScene.landscape() ? SLOT_HEIGHT_L : SLOT_HEIGHT_P;
 
 		nCols = PixelScene.landscape() ? COLS_L : COLS_P;
-		// At least 20 backpack items plus 16 equipped slots: 12 rings, weapon, armor,
-		// artifact, and mixed slot. Extra equipped champion weapon adds one row.
-		nRows = (int)Math.ceil((containerCapacity(bag) + 17)/(float)nCols);
+		// 12 rings, weapon, armor, two artifacts, mixed slot, and optional champion weapon.
+		nRows = (int)Math.ceil((containerCapacity(bag) + 18)/(float)nCols);
 
 		int windowWidth = slotWidth * nCols + SLOT_MARGIN * (nCols - 1);
 		int windowHeight = TITLE_HEIGHT + slotHeight * nRows + SLOT_MARGIN * (nRows - 1);
@@ -254,6 +253,7 @@ public class WndBag extends WndTabbed {
 		placeItem( stuff.weapon != null ? stuff.weapon : new Placeholder( ItemSpriteSheet.WEAPON_HOLDER ) );
 		placeItem( stuff.armor != null ? stuff.armor : new Placeholder( ItemSpriteSheet.ARMOR_HOLDER ) );
 		placeItem( stuff.artifact != null ? stuff.artifact : new Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ) );
+		placeItem( stuff.extraArtifact != null ? stuff.extraArtifact : new Placeholder( ItemSpriteSheet.ARTIFACT_HOLDER ) );
 		placeItem( stuff.misc != null ? stuff.misc : new Placeholder( ItemSpriteSheet.SOMETHING ) );
 		placeItem( stuff.ring != null ? stuff.ring : new Placeholder( ItemSpriteSheet.RING_HOLDER ) );
 		placeItem( stuff.extraRing != null ? stuff.extraRing : new Placeholder( ItemSpriteSheet.RING_HOLDER ) );
@@ -261,7 +261,7 @@ public class WndBag extends WndTabbed {
 			placeItem(extra != null ? extra : new Placeholder(ItemSpriteSheet.RING_HOLDER));
 		}
 
-		int equipped = 6 + stuff.ringSlots.length;
+		int equipped = 7 + stuff.ringSlots.length;
 
 		//the container itself if it's not the root backpack
 		if (container != Dungeon.hero.belongings.backpack){

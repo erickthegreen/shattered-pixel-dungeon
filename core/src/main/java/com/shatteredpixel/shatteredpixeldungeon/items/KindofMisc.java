@@ -43,6 +43,7 @@ public abstract class KindofMisc extends EquipableItem {
 		boolean equipFull = false;
 		if ( this instanceof Artifact
 				&& hero.belongings.artifact != null
+				&& hero.belongings.extraArtifact != null
 				&& hero.belongings.misc != null){
 
 			//see if we can re-arrange items first
@@ -57,8 +58,10 @@ public abstract class KindofMisc extends EquipableItem {
 				&& !hero.belongings.hasFreeDedicatedRingSlot()){
 
 			//see if we can re-arrange items first
-			if (hero.belongings.misc instanceof Artifact && hero.belongings.artifact == null){
-				hero.belongings.artifact = (Artifact) hero.belongings.misc;
+			if (hero.belongings.misc instanceof Artifact
+					&& (hero.belongings.artifact == null || hero.belongings.extraArtifact == null)){
+				if (hero.belongings.artifact == null) hero.belongings.artifact = (Artifact) hero.belongings.misc;
+				else hero.belongings.extraArtifact = (Artifact) hero.belongings.misc;
 				hero.belongings.misc = null;
 			} else {
 				equipFull = true;
@@ -67,21 +70,24 @@ public abstract class KindofMisc extends EquipableItem {
 
 		if (equipFull) {
 
-			final KindofMisc[] miscs = new KindofMisc[4];
+			final KindofMisc[] miscs = new KindofMisc[5];
 			miscs[0] = hero.belongings.artifact;
 			miscs[1] = hero.belongings.misc;
 			miscs[2] = hero.belongings.ring;
 			miscs[3] = hero.belongings.extraRing;
+			miscs[4] = hero.belongings.extraArtifact;
 
-			final boolean[] enabled = new boolean[4];
+			final boolean[] enabled = new boolean[5];
 			enabled[0] = miscs[0] != null;
 			enabled[1] = miscs[1] != null;
 			enabled[2] = miscs[2] != null;
 			enabled[3] = miscs[3] != null;
+			enabled[4] = miscs[4] != null;
 
 			//force swapping with the same type of item if 2x of that type is already present
 			if (this instanceof Ring && hero.belongings.misc instanceof Ring){
 				enabled[0] = false; //disable artifact
+				enabled[4] = false;
 			} else if (this instanceof Artifact && hero.belongings.misc instanceof Artifact){
 				enabled[2] = false; //disable ring
 				enabled[3] = false; //disable extra ring
@@ -94,7 +100,8 @@ public abstract class KindofMisc extends EquipableItem {
 							miscs[0] == null ? "---" : Messages.titleCase(miscs[0].title()),
 							miscs[1] == null ? "---" : Messages.titleCase(miscs[1].title()),
 							miscs[2] == null ? "---" : Messages.titleCase(miscs[2].title()),
-							miscs[3] == null ? "---" : Messages.titleCase(miscs[3].title())) {
+							miscs[3] == null ? "---" : Messages.titleCase(miscs[3].title()),
+							miscs[4] == null ? "---" : Messages.titleCase(miscs[4].title())) {
 
 						@Override
 						protected void onSelect(int index) {
@@ -152,6 +159,7 @@ public abstract class KindofMisc extends EquipableItem {
 
 			if (this instanceof Artifact){
 				if (hero.belongings.artifact == null)   hero.belongings.artifact = (Artifact) this;
+				else if (hero.belongings.extraArtifact == null) hero.belongings.extraArtifact = (Artifact) this;
 				else                                    hero.belongings.misc = (Artifact) this;
 			} else if (this instanceof Ring){
 				if (hero.belongings.hasFreeDedicatedRingSlot()) hero.belongings.putInFreeRingSlot((Ring) this);
@@ -182,6 +190,8 @@ public abstract class KindofMisc extends EquipableItem {
 
 			if (hero.belongings.artifact == this) {
 				hero.belongings.artifact = null;
+			} else if (hero.belongings.extraArtifact == this) {
+				hero.belongings.extraArtifact = null;
 			} else if (hero.belongings.misc == this) {
 				hero.belongings.misc = null;
 			} else if (hero.belongings.ring == this){
@@ -209,7 +219,8 @@ public abstract class KindofMisc extends EquipableItem {
 	@Override
 	public boolean isEquipped( Hero hero ) {
 		if (hero == null) return false;
-		if (hero.belongings.artifact() == this || hero.belongings.misc() == this
+		if (hero.belongings.artifact() == this || hero.belongings.extraArtifact() == this
+				|| hero.belongings.misc() == this
 				|| hero.belongings.ring() == this || hero.belongings.extraRing() == this) {
 			return true;
 		}
