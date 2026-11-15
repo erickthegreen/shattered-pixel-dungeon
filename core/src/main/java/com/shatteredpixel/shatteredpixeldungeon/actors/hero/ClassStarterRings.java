@@ -39,5 +39,6 @@ final class ClassStarterRings {
 		hero.belongings.putInFreeRingSlot(second);
 		first.activate(hero);
 		second.activate(hero);
+		hero.updateHT(true);
 	}
 }
