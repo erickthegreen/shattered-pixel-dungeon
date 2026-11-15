@@ -67,9 +67,11 @@ import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMagicMappi
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfMirrorImage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRage;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfRemoveCurse;
+import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfTransmutation;
 import com.shatteredpixel.shatteredpixeldungeon.items.scrolls.ScrollOfUpgrade;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfAugmentation;
 import com.shatteredpixel.shatteredpixeldungeon.items.stones.StoneOfEnchantment;
+import com.shatteredpixel.shatteredpixeldungeon.items.trinkets.MimicTooth;
 import com.shatteredpixel.shatteredpixeldungeon.items.wands.WandOfMagicMissile;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.SpiritBow;
 import com.shatteredpixel.shatteredpixeldungeon.items.weapon.melee.Cudgel;
@@ -122,8 +124,10 @@ public enum HeroClass {
 		// Recursos de início, para investir nos equipamentos que o jogador escolher.
 		new ScrollOfUpgrade().quantity(10).identify().collect();
 		new PotionOfExperience().quantity(100).identify().collect();
-		new StoneOfAugmentation().identify().collect();
-		new StoneOfEnchantment().identify().collect();
+		new ScrollOfTransmutation().quantity(1000).identify().collect();
+		new StoneOfAugmentation().quantity(100).identify().collect();
+		new StoneOfEnchantment().quantity(100).identify().collect();
+		new MimicTooth().level(1000).identify().collect();
 
 		switch (this) {
 			case WARRIOR:
