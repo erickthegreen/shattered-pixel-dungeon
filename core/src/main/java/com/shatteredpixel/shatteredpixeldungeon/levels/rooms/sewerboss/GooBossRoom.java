@@ -22,7 +22,9 @@
 package com.shatteredpixel.shatteredpixeldungeon.levels.rooms.sewerboss;
 
 import com.shatteredpixel.shatteredpixeldungeon.Assets;
+import com.shatteredpixel.shatteredpixeldungeon.actors.mobs.Goo;
 import com.shatteredpixel.shatteredpixeldungeon.levels.Level;
+import com.shatteredpixel.shatteredpixeldungeon.levels.Terrain;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.Room;
 import com.shatteredpixel.shatteredpixeldungeon.levels.rooms.standard.StandardRoom;
 import com.shatteredpixel.shatteredpixeldungeon.tiles.CustomTilemap;
@@ -61,6 +63,19 @@ public abstract class GooBossRoom extends StandardRoom {
 		nest.setRect(left + width()/2 - 2, top + height()/2 - 2, 4 + width()%2, 4 + height()%2);
 		
 		level.customTiles.add(nest);
+	}
+
+	protected void addSecondGoo(Level level) {
+		for (Point point : getPoints()) {
+			int cell = level.pointToCell(point);
+			if ((Terrain.flags[level.map[cell]] & Terrain.PASSABLE) != 0 && level.findMob(cell) == null
+					&& cell != level.pointToCell(center())) {
+				Goo second = new Goo();
+				second.pos = cell;
+				level.mobs.add(second);
+				return;
+			}
+		}
 	}
 	
 	public static class GooNest extends CustomTilemap {

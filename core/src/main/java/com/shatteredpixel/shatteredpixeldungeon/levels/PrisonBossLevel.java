@@ -451,6 +451,13 @@ public class PrisonBossLevel extends Level {
 				tengu.pos = tenguPos;
 				GameScene.add( tengu, 1 );
 				tengu.notice();
+				Tengu firstTwin = new Tengu();
+				firstTwin.secondaryBoss = true;
+				firstTwin.state = firstTwin.HUNTING;
+				do {
+					firstTwin.pos = randomTenguCellPos();
+				} while (Actor.findChar(firstTwin.pos) != null || !passable[firstTwin.pos]);
+				GameScene.add(firstTwin, 1);
 
 				CellEmitter.get( tengu.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				Sample.INSTANCE.play( Assets.Sounds.PUFF );
@@ -499,6 +506,12 @@ public class PrisonBossLevel extends Level {
 				tengu.pos = (arena.left + arena.width()/2) + width()*(arena.top+2);
 				GameScene.add( tengu, 1 );
 				tengu.notice();
+				Tengu arenaTwin = new Tengu();
+				arenaTwin.secondaryBoss = true;
+				arenaTwin.state = arenaTwin.HUNTING;
+				arenaTwin.pos = tengu.pos + 2;
+				if (!passable[arenaTwin.pos] || Actor.findChar(arenaTwin.pos) != null) arenaTwin.pos = tengu.pos - 2;
+				GameScene.add(arenaTwin, 1);
 
 				CellEmitter.get( tengu.pos ).burst( Speck.factory( Speck.WOOL ), 6 );
 				

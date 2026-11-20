@@ -532,7 +532,7 @@ public class YogDzewa extends Mob {
 
 		updateVisibility(Dungeon.level);
 
-		GameScene.bossSlain();
+		if (!otherBossAlive(YogDzewa.class)) GameScene.bossSlain();
 
 		if (Dungeon.isChallenged(Challenges.STRONGER_BOSSES) && Statistics.spawnersAlive == 4){
 			Badges.validateBossChallengeCompleted();
@@ -543,7 +543,7 @@ public class YogDzewa extends Mob {
 
 		Badges.validateTakingTheMick(cause);
 
-		Dungeon.level.unseal();
+		if (!otherBossAlive(YogDzewa.class)) Dungeon.level.unseal();
 		super.die( cause );
 
 		yell( Messages.get(this, "defeated") );

@@ -337,6 +337,17 @@ public class CityBossLevel extends Level {
 		boss.state = boss.WANDERING;
 		boss.pos = pointToCell(arena.center());
 		GameScene.add( boss );
+		DwarfKing second = new DwarfKing();
+		second.state = second.WANDERING;
+		for (com.watabou.utils.Point point : arena.getPoints()) {
+			int cell = pointToCell(point);
+			if (passable[cell] && Actor.findChar(cell) == null) {
+				second.pos = cell;
+				break;
+			}
+		}
+		GameScene.add(second);
+		second.beckon(Dungeon.hero.pos);
 		boss.beckon(Dungeon.hero.pos);
 
 		if (heroFOV[boss.pos]) {

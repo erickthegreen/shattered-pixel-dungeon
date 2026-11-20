@@ -336,6 +336,12 @@ public class CavesBossLevel extends Level {
 			boss.pos = pointToCell(Random.element(mainArena.getPoints()));
 		} while (!openSpace[boss.pos] || map[boss.pos] == Terrain.EMPTY_SP || Actor.findChar(boss.pos) != null);
 		GameScene.add( boss );
+		DM300 second = new DM300();
+		second.state = second.WANDERING;
+		do {
+			second.pos = pointToCell(Random.element(mainArena.getPoints()));
+		} while (!openSpace[second.pos] || map[second.pos] == Terrain.EMPTY_SP || Actor.findChar(second.pos) != null);
+		GameScene.add(second);
 
 		Game.runOnRenderThread(new Callback() {
 			@Override

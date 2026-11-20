@@ -65,10 +65,12 @@ import com.shatteredpixel.shatteredpixeldungeon.effects.Surprise;
 import com.shatteredpixel.shatteredpixeldungeon.effects.Wound;
 import com.shatteredpixel.shatteredpixeldungeon.effects.particles.ShadowParticle;
 import com.shatteredpixel.shatteredpixeldungeon.items.Generator;
+import com.shatteredpixel.shatteredpixeldungeon.items.Gold;
 import com.shatteredpixel.shatteredpixeldungeon.items.Item;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.MasterThievesArmband;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TalismanOfForesight;
 import com.shatteredpixel.shatteredpixeldungeon.items.artifacts.TimekeepersHourglass;
+import com.shatteredpixel.shatteredpixeldungeon.items.potions.PotionOfHealing;
 import com.shatteredpixel.shatteredpixeldungeon.items.potions.exotic.ExoticPotion;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.Ring;
 import com.shatteredpixel.shatteredpixeldungeon.items.rings.RingOfWealth;
@@ -985,7 +987,12 @@ public abstract class Mob extends Char {
 
 				AscensionChallenge.processEnemyKill(this);
 				
+				// Rare monsters always reward XP, even if the hero has levelled
+				// beyond the floor with the starting experience potions.
 				int exp = Dungeon.hero.lvl <= maxLvl ? EXP : 0;
+				if (MobSpawner.RARE_ALTS.containsValue(getClass()) && Dungeon.hero.lvl < Hero.MAX_LEVEL) {
+					exp = Math.max(1, EXP);
+				}
 
 				//during ascent, under-levelled enemies grant 10 xp each until level 30
 				// after this enemy kills which reduce the amulet curse still grant 10 effective xp
@@ -1034,6 +1041,10 @@ public abstract class Mob extends Char {
 			}
 
 			rollToDropLoot();
+			if (Dungeon.level != null && pos >= 0 && pos < Dungeon.level.length()) {
+				Dungeon.level.drop(new Gold(Random.IntRange(5, 10) * Math.max(1, Dungeon.depth)), pos).sprite.drop();
+				Dungeon.level.drop(new PotionOfHealing(), pos).sprite.drop();
+			}
 
 			if (cause == Dungeon.hero || cause instanceof Weapon || cause instanceof Weapon.Enchantment){
 				if (Dungeon.hero.hasTalent(Talent.LETHAL_MOMENTUM)
@@ -1070,6 +1081,14 @@ public abstract class Mob extends Char {
 				}
 			}
 		}
+	}
+
+	/** Keeps a double boss arena sealed until its final boss falls. */
+	protected boolean otherBossAlive(Class<? extends Mob> bossClass) {
+		for (Mob mob : Dungeon.level.mobs) {
+			if (mob != this && bossClass.isInstance(mob) && mob.HP > 0) return true;
+		}
+		return false;
 	}
 
 	public float lootChance(){

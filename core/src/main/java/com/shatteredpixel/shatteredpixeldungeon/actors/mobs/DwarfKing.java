@@ -547,7 +547,7 @@ public class DwarfKing extends Mob {
 	@Override
 	public void die(Object cause) {
 
-		GameScene.bossSlain();
+		if (!otherBossAlive(DwarfKing.class)) GameScene.bossSlain();
 
 		super.die( cause );
 
@@ -571,7 +571,7 @@ public class DwarfKing extends Mob {
 		}
 		Statistics.bossScores[3] += 4000;
 
-		Dungeon.level.unseal();
+		if (!otherBossAlive(DwarfKing.class)) Dungeon.level.unseal();
 
 		Bestiary.skipCountingEncounters = true;
 		for (Mob m : getSubjects()){

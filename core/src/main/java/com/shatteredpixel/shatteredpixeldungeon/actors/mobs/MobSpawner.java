@@ -61,8 +61,22 @@ public class MobSpawner extends Actor {
 
 	public static ArrayList<Class<? extends Mob>> getMobRotation(int depth ){
 		ArrayList<Class<? extends Mob>> mobs = standardMobRotation( depth );
-		addRareMobs(depth, mobs);
-		swapMobAlts(mobs);
+		ArrayList<Class<? extends Mob>> rares = new ArrayList<>();
+		for (Class<? extends Mob> mob : mobs) {
+			Class<? extends Mob> rare = RARE_ALTS.get(mob);
+			if (rare != null) rares.add(rare);
+			if (Elemental.class.isAssignableFrom(mob)) rares.add(Elemental.ChaosElemental.class);
+		}
+		// Some depths have no alternate for their standard enemies. Keep the
+		// rotation rare and appropriate to the current dungeon region.
+		if (rares.isEmpty()) {
+			Class<? extends Mob> fallback = depth <= 5 ? CausticSlime.class
+					: depth <= 10 ? SpectralNecromancer.class
+					: depth <= 15 ? ArmoredBrute.class
+					: depth <= 20 ? Elemental.ChaosElemental.class : Acidic.class;
+			rares.add(fallback);
+		}
+		mobs = rares;
 		Random.shuffle(mobs);
 		return mobs;
 	}

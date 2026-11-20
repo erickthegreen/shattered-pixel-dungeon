@@ -83,6 +83,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Tengu extends Mob {
+	public boolean secondaryBoss = false;
 	
 	{
 		spriteClass = TenguSprite.class;
@@ -130,6 +131,10 @@ public class Tengu extends Mob {
 
 	@Override
 	public void damage(int dmg, Object src) {
+		if (secondaryBoss) {
+			super.damage(dmg, src);
+			return;
+		}
 		if (!Dungeon.level.mobs.contains(this)){
 			return;
 		}
@@ -159,6 +164,7 @@ public class Tengu extends Mob {
 
 		//phase 2 of the fight is over
 		if (HP == 0 && state == PrisonBossLevel.State.FIGHT_ARENA) {
+			if (otherBossAlive(Tengu.class)) return;
 			//let full attack action complete first
 			Actor.add(new Actor() {
 
@@ -205,11 +211,23 @@ public class Tengu extends Mob {
 	
 	@Override
 	public boolean isAlive() {
+		if (secondaryBoss) return super.isAlive();
 		return super.isAlive() || Dungeon.level.mobs.contains(this); //Tengu has special death rules, see prisonbosslevel.progress()
 	}
 
 	@Override
 	public void die( Object cause ) {
+		if (secondaryBoss) {
+			super.die(cause);
+			for (Mob mob : Dungeon.level.mobs) {
+				if (mob instanceof Tengu && !((Tengu) mob).secondaryBoss && mob.HP <= 0
+						&& ((PrisonBossLevel) Dungeon.level).state() == PrisonBossLevel.State.FIGHT_ARENA) {
+					((PrisonBossLevel) Dungeon.level).progress();
+					break;
+				}
+			}
+			return;
+		}
 		
 		if (Dungeon.hero.subClass == HeroSubClass.NONE) {
 			Dungeon.level.drop( new TengusMask(), pos ).sprite.drop();
@@ -357,6 +375,7 @@ public class Tengu extends Mob {
 	private static final String ABILITIES_USED   = "abilities_used";
 	private static final String ARENA_JUMPS      = "arena_jumps";
 	private static final String ABILITY_COOLDOWN = "ability_cooldown";
+	private static final String SECONDARY_BOSS = "secondary_boss";
 	
 	@Override
 	public void storeInBundle(Bundle bundle) {
@@ -365,6 +384,7 @@ public class Tengu extends Mob {
 		bundle.put( ABILITIES_USED, abilitiesUsed );
 		bundle.put( ARENA_JUMPS, arenaJumps );
 		bundle.put( ABILITY_COOLDOWN, abilityCooldown );
+		bundle.put( SECONDARY_BOSS, secondaryBoss );
 	}
 	
 	@Override
@@ -376,6 +396,7 @@ public class Tengu extends Mob {
 		abilitiesUsed = bundle.getInt( ABILITIES_USED );
 		arenaJumps = bundle.getInt( ARENA_JUMPS );
 		abilityCooldown = bundle.getInt( ABILITY_COOLDOWN );
+		secondaryBoss = bundle.getBoolean( SECONDARY_BOSS );
 		
 		BossHealthBar.assignBoss(this);
 		if (HP <= HT/2) BossHealthBar.bleed(true);

@@ -206,20 +206,20 @@ public abstract class RegularLevel extends Level {
 	public int mobLimit() {
 		if (Dungeon.depth <= 1){
 			if (!Statistics.amuletObtained) return 0;
-			else                            return 40;
+			else                            return 80;
 		}
 
 		int mobs = 3 + Dungeon.depth % 5 + Random.Int(3);
 		if (feeling == Feeling.LARGE){
 			mobs = (int)Math.ceil(mobs * 1.33f);
 		}
-		return 4 * mobs;
+		return 8 * mobs;
 	}
 	
 	@Override
 	protected void createMobs() {
 		//on floor 1, 8 pre-set mobs are created so the player can get level 2.
-		int mobsToSpawn = Dungeon.depth == 1 ? 32 : mobLimit();
+		int mobsToSpawn = Dungeon.depth == 1 ? 64 : mobLimit();
 
 		ArrayList<Room> stdRooms = new ArrayList<>();
 		for (Room room : rooms) {

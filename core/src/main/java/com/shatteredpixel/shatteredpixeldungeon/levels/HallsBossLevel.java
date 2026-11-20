@@ -282,6 +282,15 @@ public class HallsBossLevel extends Level {
 		}
 
 		GameScene.add( boss );
+		YogDzewa second = new YogDzewa();
+		for (int offset : PathFinder.NEIGHBOURS8) {
+			int cell = boss.pos + offset;
+			if (passable[cell] && Actor.findChar(cell) == null) {
+				second.pos = cell;
+				break;
+			}
+		}
+		GameScene.add(second);
 	}
 
 	@Override

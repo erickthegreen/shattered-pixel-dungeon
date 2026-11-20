@@ -66,10 +66,10 @@ public class RingOfWealth extends Ring {
 	public String statsInfo() {
 		if (isIdentified()){
 			String info = Messages.get(this, "stats",
-					Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, soloBuffedBonus()) - 1f)));
+					Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, Math.min(30, soloBuffedBonus())) - 1f)));
 			if (isEquipped(Dungeon.hero) && soloBuffedBonus() != combinedBuffedBonus(Dungeon.hero)){
 				info += "\n\n" + Messages.get(this, "combined_stats",
-						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, combinedBuffedBonus(Dungeon.hero)) - 1f)));
+						Messages.decimalFormat("#.##", 100f * (Math.pow(1.20f, Math.min(30, combinedBuffedBonus(Dungeon.hero))) - 1f)));
 			}
 			return info;
 		} else {
@@ -79,7 +79,7 @@ public class RingOfWealth extends Ring {
 
 	public String upgradeStat1(int level){
 		if (cursed && cursedKnown) level = Math.min(-1, level-3);
-		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.2f, level+1)-1f)) + "%";
+		return Messages.decimalFormat("#.##", 100f * (Math.pow(1.2f, Math.min(30, level+1))-1f)) + "%";
 	}
 
 	private static final String TRIES_TO_DROP = "tries_to_drop";
@@ -105,11 +105,11 @@ public class RingOfWealth extends Ring {
 	}
 	
 	public static float dropChanceMultiplier( Char target ){
-		return (float)Math.pow(1.20, getBuffedBonus(target, Wealth.class));
+		return (float)Math.pow(1.20, Math.min(30, getBuffedBonus(target, Wealth.class)));
 	}
 	
 	public static ArrayList<Item> tryForBonusDrop(Char target, int tries ){
-		int bonus = getBuffedBonus(target, Wealth.class);
+		int bonus = Math.min(30, getBuffedBonus(target, Wealth.class));
 
 		if (bonus <= 0) return null;
 
@@ -138,7 +138,7 @@ public class RingOfWealth extends Ring {
 				//using the two to get substantially more upgrade value than intended
 				for (Wealth w : target.buffs(Wealth.class)){
 					if (w.buffedLvl() > equipBonus){
-						equipBonus = w.buffedLvl() + Math.min(equipBonus, 2);
+						equipBonus = Math.min(30, w.buffedLvl()) + Math.min(equipBonus, 2);
 					} else {
 						equipBonus += Math.min(w.buffedLvl(), 2);
 					}
